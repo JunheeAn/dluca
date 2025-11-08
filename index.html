@@ -4,70 +4,46 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>D-LUCA — Project LUA</title>
-  <meta name="description" content="Local LLM × UE5 MetaHuman으로 Visible Conversation을 구현하는 Project LUA의 원페이지 소개.">
+  <meta name="description" content="보이는 대화를 지향하는 실시간 디지털 휴먼 프로토타입 Project LUA의 원페이지 소개.">
   <meta name="theme-color" content="#0b0b0c">
   <meta property="og:title" content="D-LUCA — Project LUA">
-  <meta property="og:description" content="Visible Conversation: viseme lipsync, emotion, micro idle.">
+  <meta property="og:description" content="Real Presence, Real Conversation.">
   <meta property="og:image" content="hero.jpg">
   <meta property="og:type" content="website">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#0b0b0c; --fg:#f3f3f3; --muted:#cfcfd3; --line:#232326;
-      --chip:#ffffff12; --chipLine:#2a2a2e;
-    }
+    :root{--bg:#0b0b0c;--fg:#f3f3f3;--muted:#cfcfd3;--line:#232326;--chip:#ffffff12;--chipLine:#2a2a2e}
     *{box-sizing:border-box}
-    html,body{
-      margin:0; background:var(--bg); color:var(--fg);
-      font-family:'Inter','Noto Sans KR',system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Malgun Gothic,sans-serif;
-      line-height:1.55;
-    }
-    a{color:inherit; text-decoration:none}
+    html,body{margin:0;background:var(--bg);color:var(--fg);
+      font-family:'Inter','Noto Sans KR',system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Malgun Gothic,sans-serif;line-height:1.55}
+    a{color:inherit;text-decoration:none}
     html{scroll-behavior:smooth}
     section[id]{scroll-margin-top:72px}
-
-    .wrap{max-width:1080px; margin:0 auto; padding:18px}
+    .wrap{max-width:1080px;margin:0 auto;padding:18px}
 
     /* NAV */
-    .nav{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter:saturate(1.1) blur(6px);
-      background:rgba(11,11,12,.6);
-      border-bottom:1px solid var(--line);
-      display:flex; justify-content:space-between; align-items:center;
-      padding:10px 16px;
-    }
-    .brand{font-weight:800; letter-spacing:.2px}
-    .menu{display:flex; gap:10px; flex-wrap:wrap}
-    .chip{padding:8px 12px; border:1px solid var(--chipLine); border-radius:12px; background:var(--chip)}
+    .nav{position:sticky;top:0;z-index:50;backdrop-filter:saturate(1.1) blur(6px);
+         background:rgba(11,11,12,.6);border-bottom:1px solid var(--line);
+         display:flex;justify-content:space-between;align-items:center;padding:10px 16px}
+    .brand{font-weight:800;letter-spacing:.2px}
+    .menu{display:flex;gap:10px;flex-wrap:wrap}
+    .chip{padding:8px 12px;border:1px solid var(--chipLine);border-radius:12px;background:var(--chip)}
 
-    /* HERO */
-    .hero{
-      position:relative; border-radius:18px; overflow:hidden; margin-top:10px;
-      height:60vh; min-height:420px;
-      background:#000 url('hero.jpg') center/cover no-repeat;
-      isolation:isolate;
-    }
-    .hero::after{
-      content:""; position:absolute; inset:0;
-      background:linear-gradient(180deg,#0000 0%,#0006 55%,#000a 100%);
-    }
-    .hero-inner{position:absolute; inset:auto 0 0 0; padding:26px 20px}
-    h1{font-size:28px; margin:10px 0 6px}
-    h2{font-size:20px; margin:24px 0 8px}
+    /* HERO: 이미지 전체 표시 (크롭 없음) */
+    .hero{position:relative;border-radius:18px;overflow:hidden;margin-top:10px}
+    .hero img{display:block;width:100%;height:auto}          /* 전체 이미지 보이도록 */
+    .hero-title{position:absolute;left:20px;bottom:20px;margin:0;
+                font-size:28px;font-weight:800;color:#111;   /* 밝은 이미지 대비 검은색 */
+                background:rgba(255,255,255,0);padding:2px 6px;border-radius:6px}
+    @media (max-width:640px){.hero-title{font-size:22px}}
+
+    h1{font-size:26px;margin:10px 0 6px}
+    h2{font-size:20px;margin:24px 0 8px}
     p,li{color:var(--muted)}
-    .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
 
-    /* CARDS */
-    .card{border:1px solid var(--line); border-radius:16px; padding:16px; margin:18px 0; background:#111114}
-    .footer{opacity:.7; margin:18px 0 8px; font-size:13px; color:var(--muted)}
-
-    /* Responsive */
-    @media (max-width:640px){
-      h1{font-size:22px}
-      .hero{height:52vh; min-height:300px}
-      .menu .chip{padding:8px 10px}
-    }
+    .card{border:1px solid var(--line);border-radius:16px;padding:16px;margin:18px 0;background:#111114}
+    .footer{opacity:.7;margin:18px 0 8px;font-size:13px;color:var(--muted)}
   </style>
 </head>
 <body>
@@ -91,20 +67,23 @@
 
 <main class="wrap">
 
-  <!-- HERO -->
+  <!-- HERO: 이미지 + 검은색 타이틀만 -->
   <section id="overview" class="hero" aria-label="Hero">
-    <div class="hero-inner">
-      <h1>Project LUA — LLM × MetaHuman</h1>
-      <p>Local LLM × UE5 MetaHuman으로 <b>Visible Conversation</b>을 구현하는 실시간 디지털 휴먼 프로토타입.</p>
-      <div class="btns" role="group" aria-label="Primary actions">
-        <a class="chip" href="https://youtu.be/FwiWDV9LYas" target="_blank" rel="noopener noreferrer">Prototype Demo</a>
-        <a class="chip" href="https://youtu.be/AUik19Bm5PI" target="_blank" rel="noopener noreferrer">Vision Video</a>
-        <a class="chip" href="https://youtu.be/XkNIi9d-ayc" target="_blank" rel="noopener noreferrer">EdTech Showcase</a>
-        <a class="chip" href="executive-summary.pdf" target="_blank" rel="noopener noreferrer">1-Page Executive Summary (PDF)</a>
-        <a class="chip" href="https://junheean.github.io/junhee/">About Me</a>
-        <a class="chip" href="https://dluca.myportfolio.com" target="_blank" rel="noopener noreferrer">Portfolio</a>
-        <a class="chip" href="https://www.instagram.com/d.luca0/" target="_blank" rel="noopener noreferrer">Instagram</a>
-      </div>
+    <img src="hero.jpg" alt="Project LUA banner">
+    <h1 class="hero-title">Project LUA</h1>
+  </section>
+
+  <!-- 설명과 버튼은 이미지 밑 카드로 -->
+  <section class="card">
+    <p>보이는 대화를 지향하는 실시간 디지털 휴먼 프로토타입입니다.</p>
+    <div class="btns" role="group" aria-label="Primary actions">
+      <a class="chip" href="https://youtu.be/FwiWDV9LYas" target="_blank" rel="noopener noreferrer">Prototype Demo</a>
+      <a class="chip" href="https://youtu.be/AUik19Bm5PI" target="_blank" rel="noopener noreferrer">Vision Video</a>
+      <a class="chip" href="https://youtu.be/XkNIi9d-ayc" target="_blank" rel="noopener noreferrer">EdTech Showcase</a>
+      <a class="chip" href="executive-summary.pdf" target="_blank" rel="noopener noreferrer">1-Page Executive Summary (PDF)</a>
+      <a class="chip" href="https://junheean.github.io/junhee/">About Me</a>
+      <a class="chip" href="https://dluca.myportfolio.com" target="_blank" rel="noopener noreferrer">Portfolio</a>
+      <a class="chip" href="https://www.instagram.com/d.luca0/" target="_blank" rel="noopener noreferrer">Instagram</a>
     </div>
   </section>
 
@@ -162,7 +141,7 @@
     </div>
   </section>
 
-  <div class="footer">© D-LUCA / Project LUA. “MetaHuman” is a trademark of Epic Games, Inc.</div>
+  <div class="footer">© D-LUCA / Project LUA.</div>
 </main>
 
 </body>
