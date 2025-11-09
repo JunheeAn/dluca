@@ -16,7 +16,7 @@
       --subtle:#666;                /* 보조 텍스트 */
       --line:rgba(17,17,17,.16);    /* 얇은 경계선 */
       --maxw:800px;                 /* 본문 폭 */
-      --labelw:180px;               /* 좌측 제목 칼럼 기본 폭 */
+      --labelw:180px;               /* 좌측 제목 칼럼 폭(데스크톱) */
       --gap:24px;
       --edge:16px;                  /* 좌/우 외곽 여백 (타이틀/구분선 정렬 기준) */
     }
@@ -40,12 +40,12 @@
     }
     .header-inner{
       width:100%;
-      padding:10px 36px 10px 16px;  /* 더 왼쪽/오른쪽으로 밀기 */
+      padding:10px 36px 10px 16px;  /* 왼쪽/오른쪽 멀리 밀기 */
       display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
     .brand{font-weight:800; font-size:.95rem; letter-spacing:.1px;}
     .menu{display:flex; gap:18px; align-items:center; margin-left:auto}
-    .menu a{font-size:.86rem; color:var(--subtle)} /* 더 작게 */
+    .menu a{font-size:.86rem; color:var(--subtle)}
     .menu a:focus,.menu a:hover{color:var(--fg)}
 
     /* ---- Containers ---- */
@@ -59,21 +59,18 @@
     .page-title{
       font-weight:200; letter-spacing:-.2px;
       font-size:54px; line-height:1.05;
-      margin:18px 0 6px; /* 이미지 바로 위에 오도록 살짝 내림 */
+      margin:18px 0 6px; /* 이미지 바로 위에 */
     }
     @media (max-width:720px){
-      :root{ --edge:14px; }
-      .page-title{font-size:38px}
+      :root{ --edge:12px; }
+      .page-title{font-size:34px; margin:12px 0 6px;}
     }
 
-    /* ---- Hero (확대) ---- */
+    /* ---- Hero ---- */
     .hero{margin:0}
-    .hero img{
-      display:block; width:100%; height:auto;
-      border:1px solid var(--line);
-    }
+    .hero img{display:block; width:100%; height:auto; border:1px solid var(--line)}
 
-    /* ---- Tagline (중앙, 두 줄, 세로선, 이탤릭/얇게) ---- */
+    /* ---- Tagline ---- */
     .tag-wrap{max-width:var(--maxw); margin:12px auto 8px; padding:0 18px}
     .tagline{
       display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -82,50 +79,64 @@
     .tagline em{font-style:italic; font-weight:200; letter-spacing:.2px; font-size:1.02rem;}
     .tagline .sep{width:1px; height:22px; background:#151515; opacity:.45; margin:14px 0; display:inline-block;}
 
-    /* ---- Overview CTA 버튼(밝은 검정, 더 작게) ---- */
+    /* ---- Overview CTA ---- */
     .cta-row{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:12px}
     .btn{
-      background:#222;                /* 조금 더 밝은 검정 */
-      color:#fff;
-      border:1px solid rgba(255,255,255,.8);
-      border-radius:12px;
-      padding:8px 12px;               /* 더 작게 */
-      font-size:.88rem;
-      white-space:nowrap;
+      background:#222; color:#fff; border:1px solid rgba(255,255,255,.8);
+      border-radius:12px; padding:8px 12px; font-size:.88rem; white-space:nowrap;
     }
     .btn:hover{border-color:#fff; text-decoration:none}
 
-    /* ---- Two-column w/ vertical divider ---- */
+    /* ---- Two-column (desktop) ---- */
     .section{padding:18px 0}
-    .twocol{
-      display:grid; grid-template-columns: var(--labelw) 1px 1fr; gap:var(--gap); align-items:start;
-    }
+    .twocol{display:grid; grid-template-columns: var(--labelw) 1px 1fr; gap:var(--gap); align-items:start;}
     .vrule{width:1px; background:var(--line); min-height:100%}
-    .label{color:#111; font-weight:800; font-size:1.08rem; line-height:1.3;} /* 제목 더 굵고 약간 크게 */
+    .label{color:#111; font-weight:800; font-size:1.08rem; line-height:1.3;}
     .body{color:var(--muted)}
     .narrow{max-width:60ch}
-    .body.tight{margin-top:-4px;} /* Definition 내용 위로 당김 */
+    .body.tight{margin-top:-4px;}
     .twocol .body > *:first-child{margin-top:0}
 
-    /* ---- Problem | Solution split ---- */
-    .split{
-      display:grid; grid-template-columns: 1fr 1px 1fr; gap:var(--gap); align-items:start;
-    }
+    /* ---- Problem | Solution split (desktop) ---- */
+    .split{display:grid; grid-template-columns: 1fr 1px 1fr; gap:var(--gap); align-items:start;}
     .subhead{
       font-weight:800; font-size:1.06rem; line-height:1.3; margin-bottom:6px;
       position:relative; display:inline-block; padding-bottom:6px;
     }
-    .subhead::after{
-      content:""; position:absolute; left:0; bottom:0;
-      width:44px; height:1px; background:rgba(17,17,17,.35); /* 짧은 언더라인 */
-    }
+    .subhead::after{content:""; position:absolute; left:0; bottom:0; width:44px; height:1px; background:rgba(17,17,17,.35);}
 
     /* ---- Contact key-value grid ---- */
-    .kv{
-      display:grid; grid-template-columns: 110px 1fr; gap:8px 14px; align-items:start;
-    }
+    .kv{display:grid; grid-template-columns: 110px 1fr; gap:8px 14px; align-items:start;}
     .kv b{font-weight:700}
+
     .footer{color:var(--subtle); font-size:.9rem; padding:18px 0 40px}
+
+    /* ========== Mobile-only overrides (≤ 720px) ========== */
+    @media (max-width: 720px) {
+      /* 구분선 길이: 좌우 여백 일치 */
+      .rule.edge{ width:calc(100% - 24px); }
+
+      /* 2단 → 1단: 모든 섹션 단일 흐름 */
+      .twocol, .twocol.rev, .split{ grid-template-columns:1fr !important; }
+      .vrule{ display:none; }
+
+      /* 모든 섹션: 제목 밑에 짧은 밑줄 표시 후 내용 */
+      .label{
+        margin-bottom:8px; padding-bottom:6px; position:relative; display:block;
+      }
+      .label::after{
+        content:""; position:absolute; left:0; bottom:0;
+        width:44px; height:1px; background:rgba(17,17,17,.35);
+      }
+
+      /* Roadmap: 모바일에서 제목이 먼저 나오도록 순서 보정 */
+      .twocol.rev .label{ order:-1; }
+
+      /* Problem / Solution: 자동으로 위→아래로 쌓임 (label 밑줄은 subhead에 이미 적용됨) */
+
+      /* Contact: 단일 컬럼(제목 밑줄 + 내용), 표 정렬 간격 축소 */
+      .kv{ grid-template-columns: 90px 1fr; gap:6px 10px; }
+    }
   </style>
 </head>
 <body>
@@ -142,17 +153,17 @@
   </div>
 </header>
 
-<!-- Title (히어로 바로 위, 좌측으로 더 밀기) -->
+<!-- Title -->
 <div class="edge-row">
   <h1 class="page-title">Project LUA</h1>
 </div>
 
-<!-- Hero (더 크게: 이미지 원본비 유지, 전체폭) -->
+<!-- Hero -->
 <figure class="hero">
   <img src="hero.jpg" alt="Project LUA banner">
 </figure>
 
-<!-- Tagline 중앙: 두 줄 + 중간 세로선 + 이탤릭/얇게 -->
+<!-- Tagline -->
 <div class="tag-wrap">
   <div class="tagline" aria-label="Tagline">
     <em>Real Presence, Real Conversation</em>
@@ -163,14 +174,13 @@
 
 <hr class="rule edge">
 
-<!-- Overview (중앙 정렬, '이다'체 + CTA 버튼) -->
+<!-- Overview -->
 <section id="overview" class="wrap section" style="text-align:center">
   <p class="lead" style="margin:0 auto; max-width:680px">
     <b>Project LUA</b>는 ‘보이는 대화(Visible Conversation)’를 목표로 하는 실시간 디지털 휴먼 연구/프로토타입이다.
     로컬 환경의 언어 모델이 대화 의도와 맥락을 생성하면, 시스템은 이를 <b>자막·음성·입모양·감정·미세동작</b>으로 정밀하게 동기화해
     사람과 마주 앉아 대화하는 듯한 <b>존재감·설득력</b>을 만든다. 목표는 ‘빠른 답변’이 아니라, 실제 상호작용에서 체감되는 <b>관계감</b>을 끌어올리는 것이다.
   </p>
-
   <div class="cta-row">
     <a class="btn" href="https://youtu.be/FwiWDV9LYas" target="_blank" rel="noopener">Prototype&nbsp;Demo</a>
     <a class="btn" href="https://youtu.be/AUik19Bm5PI" target="_blank" rel="noopener">Vision&nbsp;Video</a>
@@ -181,12 +191,12 @@
 
 <hr class="rule edge">
 
-<!-- Definition (좌: 제목 넓게 / 우: 내용 좁게, 상단선 맞춤) -->
+<!-- Definition (데스크톱: 2단 / 모바일: 제목 밑줄 + 내용) -->
 <section id="definition" class="wrap section" style="--labelw:260px">
   <div class="twocol">
     <div class="label">Definition</div>
     <div class="vrule" aria-hidden="true"></div>
-    <div class="body narrow tight">
+    <div class="body narrow">
       <p>
         Project <b>LUA</b>는 <b>‘존재감 자체가 인터페이스’</b>라는 자신의 명제를 실시간 상호작용으로 구현한 디지털 휴먼 실험이자 작품이다.
         텍스트 상자 속 대답을 넘어, 시선·표정·타이밍·말투와 같은 가시적 대화(Visible Conversation)를 통해 사람과 만나는 경험을 설계한다.
@@ -199,7 +209,7 @@
 
 <hr class="rule edge">
 
-<!-- Problem | Solution (좌/우, 가운데 세로선 + 각 타이틀 밑 짧은 라인) -->
+<!-- Problem | Solution (데스크톱: 좌/우 / 모바일: 위→아래) -->
 <section id="ps" class="wrap section">
   <div class="split">
     <div class="body">
@@ -228,7 +238,7 @@
 
 <hr class="rule edge">
 
-<!-- System Architecture (상위 타이틀, 하위: Runtime / Orchestration) -->
+<!-- System Architecture (하위: Runtime / Orchestration) -->
 <section id="system" class="wrap section">
   <div class="twocol">
     <div class="label">System Architecture</div>
@@ -258,9 +268,9 @@
 
 <hr class="rule edge">
 
-<!-- Roadmap (우: 제목, 좌: 내용) -->
+<!-- Roadmap (데스크톱: 우측 타이틀 / 모바일: 타이틀 먼저) -->
 <section id="roadmap" class="wrap section">
-  <div class="twocol" style="grid-template-columns: 1fr 1px var(--labelw);">
+  <div class="twocol rev" style="grid-template-columns: 1fr 1px var(--labelw);">
     <div class="body">
       <h3 class="small" style="margin:0 0 6px">11월 — 시스템 품질 정비</h3>
       <ul>
@@ -292,7 +302,7 @@
 
 <hr class="rule edge">
 
-<!-- Contact (두 단 구성: 좌 제목 / 우 내용, 라벨 정렬) -->
+<!-- Contact (데스크톱: 좌 제목 / 우 내용, 모바일: 제목 밑줄 후 내용) -->
 <section id="contact" class="wrap section">
   <div class="twocol">
     <div class="label">Contact</div>
