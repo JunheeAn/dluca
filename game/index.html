@@ -9,88 +9,79 @@
 <style>
   :root{
     --bg:#f7f9fb; --fg:#111; --muted:#2a2a2a; --subtle:#666;
-    --line:rgba(17,17,17,.16); --accent:#111;
+    --line:rgba(17,17,17,.16);
     --maxw:1040px; --pad:28px;
-    --arrowBase:0.18;       /* 기본(옅게) 표시되는 화살표 투명도 */
-    --arrowHover:0.85;      /* hover/포커스시 투명도 */
+    --arrowBase:0.18; --arrowHover:0.85;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--fg);font-family:'Inter','Noto Sans KR',system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Malgun Gothic,sans-serif;line-height:1.65}
+  html,body{margin:0;background:var(--bg);color:var(--fg);
+    font-family:'Inter','Noto Sans KR',system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Malgun Gothic,sans-serif;line-height:1.65}
   a{color:inherit;text-decoration:none}
   a:hover{text-decoration:underline}
-  .header{
-    position:sticky;top:0;z-index:50;
-    background:rgba(247,249,251,.86);backdrop-filter:saturate(1.05) blur(6px);
-    border-bottom:1px solid var(--line);
-  }
-  .header-inner{
-    max-width:var(--maxw);margin:0 auto;padding:10px var(--pad);
-    display:flex;align-items:center;gap:12px;justify-content:space-between;
-  }
-  .brand{font-weight:800;font-size:.95rem;letter-spacing:.1px}
+
+  /* Header */
+  .header{position:sticky;top:0;z-index:50;background:rgba(247,249,251,.86);
+    backdrop-filter:saturate(1.05) blur(6px);border-bottom:1px solid var(--line)}
+  .header-inner{max-width:var(--maxw);margin:0 auto;padding:10px var(--pad);
+    display:flex;align-items:center;gap:12px;justify-content:space-between}
+  .brand{font-weight:800;font-size:.95rem}
   .top-menu{display:flex;gap:16px;align-items:center}
   .top-menu a{font-size:.86rem;color:var(--subtle)}
   .top-menu a:hover{color:var(--fg)}
 
-  /* Slider */
+  /* Stage / Slider */
   .stage{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);position:relative}
   .frame{overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#fff}
   .track{display:flex;transition:transform .45s ease}
   .slide{
-    min-width:100%;padding:32px 32px 60px; /* 아래쪽 여유: 카운터 표시 */
-    display:grid;gap:18px;align-items:center;
+    position:relative;
+    min-width:100%;
+    padding:72px 32px 60px; /* 상단 라벨 공간 확보 → 본문 시작 고정 */
+    display:grid;gap:18px;align-items:start;
   }
-  .s-center{justify-items:center;text-align:center}
-  .s-two{grid-template-columns:1.1fr .9fr;gap:28px}
   .s-one{grid-template-columns:1fr}
-  .h1{font-weight:800;font-size:28px;line-height:1.2;margin:0}
-  .h2{font-weight:700;font-size:20px;margin:0 0 8px}
+  .s-two{grid-template-columns:1.1fr .9fr;gap:28px}
+
+  /* Slide label (좌상단 작은 텍스트) */
+  .sl-label{
+    position:absolute;top:14px;left:16px;
+    font-size:.78rem;color:var(--subtle);letter-spacing:.02em;
+  }
+
+  .h1{font-weight:800;font-size:28px;margin:0}
+  .h2{font-weight:700;font-size:20px;margin:0}
   .body{color:var(--muted)}
   .rule{border:0;border-top:1px solid var(--line);margin:8px 0 12px}
-  .tag{display:inline-block;font-size:.78rem;color:#333;background:#eef1f6;border:1px solid var(--line);padding:3px 8px;border-radius:999px}
 
-  /* Media */
   .media{width:100%;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fcfdff}
   .media img{width:100%;height:auto;display:block}
+
+  /* Diagram */
+  .diagram{border:1px dashed var(--line);border-radius:10px;padding:12px;background:#fcfdff}
+  .diagram svg{width:100%;height:auto;display:block}
+
+  /* Cards & KPI (사용 안 하는 슬라이드 제거됨) */
   .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
   .card{border:1px solid var(--line);border-radius:10px;padding:12px}
-  .card b{display:block;margin-bottom:4px}
-  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-  .kpi .card{padding:10px}
 
-  /* Arrows */
-  .nav{
-    position:absolute;inset:0;pointer-events:none;
-    display:flex;align-items:center;justify-content:space-between;padding:0 4px;
-  }
+  /* Arrows (옅게) */
+  .nav{position:absolute;inset:0;pointer-events:none;
+    display:flex;align-items:center;justify-content:space-between;padding:0 4px}
   .arrow{
-    pointer-events:auto;user-select:none;cursor:pointer;
+    pointer-events:auto;cursor:pointer;user-select:none;
     width:44px;height:44px;border-radius:999px;border:1px solid var(--line);
-    background:rgba(17,17,17,var(--arrowBase));color:#fff;display:flex;align-items:center;justify-content:center;
-    transition:opacity .2s,transform .15s,background .2s;
-    opacity:1;
+    background:rgba(17,17,17,var(--arrowBase));color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    transition:opacity .2s,transform .15s,background .2s;opacity:1;
   }
   .arrow:hover,.arrow:focus{background:rgba(17,17,17,var(--arrowHover));outline:none}
   .arrow:active{transform:scale(.98)}
   .arrow svg{width:18px;height:18px;fill:#fff}
+  .arrow.hidden{visibility:hidden}
 
   /* Counter */
-  .counter{
-    position:absolute;left:0;right:0;bottom:10px;text-align:center;
-    font-size:.78rem;color:var(--subtle);pointer-events:none;
-  }
-
-  /* Buttons */
-  .btn{display:inline-flex;align-items:center;gap:6px;background:#111;color:#fff;border:1px solid rgba(255,255,255,.9);border-radius:12px;padding:8px 12px;font-size:.9rem;text-decoration:none}
-  .btn:hover{text-decoration:none;border-color:#fff}
-  .btn.ghost{background:#eceff3;color:#111;border:1px solid var(--line)}
-  .btn.ghost:hover{background:#e6e9ee}
-
-  .cta-row{display:flex;flex-wrap:wrap;gap:8px}
-  .muted{color:var(--subtle)}
-
-  /* SVG diagram wrapper */
-  .diagram{border:1px dashed var(--line);border-radius:10px;padding:12px;background:#fcfdff}
+  .counter{position:absolute;left:0;right:0;bottom:10px;text-align:center;
+    font-size:.78rem;color:var(--subtle);pointer-events:none}
 
   /* Footer */
   .footer{max-width:var(--maxw);margin:16px auto 32px;padding:0 var(--pad);color:var(--subtle);font-size:.9rem}
@@ -98,14 +89,14 @@
   /* Responsive */
   @media (max-width:960px){
     .s-two{grid-template-columns:1fr}
-    .cards{grid-template-columns:1fr 1fr}
-    .kpi{grid-template-columns:1fr 1fr}
   }
   @media (max-width:640px){
-    .slide{padding:24px 18px 56px}
-    .cards{grid-template-columns:1fr}
-    .kpi{grid-template-columns:1fr 1fr}
+    .slide{padding:72px 18px 56px}
     .arrow{width:40px;height:40px}
+    /* 모바일에선 다이어그램을 먼저 보이도록 */
+    .s-two .diagram{order:-1}
+    /* 다이어그램 키워서 가독성 확보 */
+    .diagram svg{max-height:360px}
   }
 </style>
 </head>
@@ -116,9 +107,7 @@
     <a class="brand" href="../" title="Back to Main">DLUCA</a>
     <nav class="top-menu">
       <a href="executive-summary.pdf" target="_blank" rel="noopener">Executive Summary (PDF)</a>
-      <a href="https://youtu.be/FwiWDV9LYas" target="_blank" rel="noopener">Demo</a>
-      <a href="https://youtu.be/AUik19Bm5PI" target="_blank" rel="noopener">Vision</a>
-      <a href="https://youtu.be/XkNIi9d-ayc" target="_blank" rel="noopener">EdTech</a>
+      <a href="https://junheean.github.io/junhee/" target="_blank" rel="noopener">About me</a>
     </nav>
   </div>
 </header>
@@ -128,146 +117,121 @@
     <div class="track" id="track">
 
       <!-- s1 Cover -->
-      <section class="slide s-center s-one" data-slide="1" aria-label="Cover">
+      <section class="slide s-one" data-slide="1" aria-label="Cover">
+        <div class="sl-label">High-Concept</div>
         <div>
-          <span class="tag">High-Concept</span>
-          <h1 class="h1" style="margin-top:6px">Project LUA — Visible-Conversation NPC Runtime</h1>
-          <p class="muted" style="margin-top:4px"><em>From answers to encounters</em></p>
+          <h1 class="h1">Project LUA — Visible-Conversation NPC Runtime<br><span style="font-weight:600;font-size:16px;color:#333">가시적 대화 NPC 런타임</span></h1>
           <div class="media" style="margin-top:12px">
-            <!-- 업로드: s1-cover.jpg -->
-            <img src="s1-cover.jpg" alt="Project LUA cover">
+            <!-- 메인 hero 이미지 재사용 -->
+            <img src="../hero.jpg" alt="Project LUA hero">
           </div>
-          <div class="cta-row" style="margin-top:12px">
-            <a class="btn" href="https://youtu.be/FwiWDV9LYas" target="_blank" rel="noopener">Prototype&nbsp;Demo</a>
-            <a class="btn ghost" href="executive-summary.pdf" target="_blank" rel="noopener">Executive&nbsp;Summary</a>
-          </div>
+          <p class="body" style="text-align:center;margin-top:10px"><em>From answers to encounters</em></p>
         </div>
       </section>
 
-      <!-- s2 Why Me / My Story -->
+      <!-- s2 Why me -->
       <section class="slide s-two" data-slide="2" aria-label="Why me">
+        <div class="sl-label">Why me</div>
         <div>
-          <span class="tag">Creator’s Note</span>
-          <h2 class="h2">Why me — 연구 → 기획 → 구현 → 전시</h2>
+          <h2 class="h2">Why me — 나의 배경</h2>
           <hr class="rule">
-          <div class="body">
-            <ul>
-              <li><b>2023</b> — AI NPC로 만드는 <b>창발적 서사</b> 연구(논문) <a href="paper.pdf" target="_blank" rel="noopener">[paper]</a></li>
-              <li><b>2023</b> — DreamCanvas(現 D-LUCA 전신) <b>사업계획서</b> 작성 <a href="dreamcanvas-plan.pdf" target="_blank" rel="noopener">[plan]</a></li>
-              <li><b>2024–25</b> — 기술 장벽 돌파 → <b>LUA 프로토타입</b> 완성</li>
-              <li><b>2025</b> — EdTech 전시(실시간 <b>AI 튜터</b>) <a href="https://youtu.be/XkNIi9d-ayc" target="_blank" rel="noopener">[video]</a></li>
-            </ul>
-            <p class="muted">한 줄: 혼자서 <b>연구·기획·구현</b>을 끝까지 밀어 붙여 <b>현장 반응</b>까지 확인했습니다.</p>
-          </div>
+          <ul class="body">
+            <li><b>2023</b> — AI NPC로 만드는 <b>창발적 서사</b> 연구(논문) <a href="paper.pdf" target="_blank" rel="noopener">[paper]</a></li>
+            <li><b>2023</b> — <b>DreamCanvas</b> (DLUCA 전신)</li>
+            <li><b>2024–25</b> — 기술 장벽 돌파 → <b>LUA 프로토타입</b> 완성</li>
+            <li><b>2025</b> — EdTech 전시(실시간 <b>AI Tutor LUA</b>)</li>
+          </ul>
+          <p class="body" style="margin-top:6px">혼자서 <b>연구·기획·구현·전시</b>까지 끝까지 진행했고, <b>현장 반응</b>까지 확인했습니다.</p>
         </div>
         <div class="media">
-          <!-- 업로드: s2-story.jpg -->
-          <img src="s2-story.jpg" alt="Timeline collage">
+          <!-- 업로드: s2-aitutor.jpg -->
+          <img src="s2-aitutor.jpg" alt="AI Tutor LUA">
         </div>
       </section>
 
       <!-- s3 Problem -->
       <section class="slide s-two" data-slide="3" aria-label="Problem">
+        <div class="sl-label">Problem</div>
         <div>
-          <span class="tag">Problem</span>
-          <h2 class="h2">Presence Gap / Uncanny Fatigue / Brand Incoherence</h2>
+          <h2 class="h2">Presence Gap / Uncanny Fatigue / Lore Drift(설정 일탈)</h2>
           <hr class="rule">
           <ul class="body">
-            <li><b>Presence Gap</b> — 텍스트/음성만으로는 <b>대면감</b>과 <b>신뢰</b> 축적이 어렵다.</li>
+            <li><b>Presence Gap</b> — 텍스트/음성만으론 <b>대면감·신뢰</b> 축적이 어렵다.</li>
             <li><b>Uncanny Fatigue</b> — 어긋난 <b>표정·타이밍</b>이 피로/거부감 유발.</li>
-            <li><b>Brand Incoherence</b> — LLM 즉석 응답은 <b>톤·금칙·지식 경계</b> 일관성 붕괴.</li>
+            <li><b>Lore Drift</b> — 즉석 응답이 <b>세계관·설정</b> 일관성에서 이탈.</li>
           </ul>
-          <p><b>→ 해결책:</b> <em>Visible Conversation</em> — 보이는 대화와 대면 가능한 존재감.</p>
+          <p><b>→ 해결:</b> <em>Visible Conversation</em> + 일관된 <b>오케스트레이션</b>.</p>
         </div>
         <div class="media">
-          <!-- 업로드: s3-problem.jpg -->
-          <img src="s3-problem.jpg" alt="Problem illustration">
+          <!-- 선택: 필요 없으면 파일 업로드 생략 가능 -->
+          <img src="s3-problem.jpg" alt="(optional) Problem illustration">
         </div>
       </section>
 
       <!-- s4 Vision / Core Experience -->
       <section class="slide s-two" data-slide="4" aria-label="Vision">
+        <div class="sl-label">Vision</div>
         <div>
-          <span class="tag">Vision</span>
           <h2 class="h2">대면 가능한 NPC — Core Experience</h2>
           <hr class="rule">
           <p class="body">시선·표정·타이밍이 <b>말과 동시에</b> 움직인다. 플레이어는 “대답을 듣는다”를 넘어, <b>만난다</b>를 경험한다.</p>
-          <div class="cta-row" style="margin-top:10px">
-            <a class="btn" href="https://youtu.be/AUik19Bm5PI" target="_blank" rel="noopener">Vision&nbsp;Video</a>
-            <a class="btn ghost" href="s4-vision.jpg" target="_blank" rel="noopener">Key Visual</a>
-          </div>
         </div>
         <div class="media">
-          <!-- 업로드: s4-vision.jpg -->
           <img src="s4-vision.jpg" alt="Core experience visual">
         </div>
       </section>
 
-      <!-- s5 Core Loop -->
+      <!-- s5 Core Loop (diagram 크게/상단 배치) -->
       <section class="slide s-two" data-slide="5" aria-label="Core Loop">
-        <div>
-          <span class="tag">Core Loop</span>
-          <h2 class="h2">Listen → Think → Speak → React → Idle</h2>
-          <hr class="rule">
-          <p class="body">침묵 구간에는 <b>Back-channel Barks</b>(끄덕/짧은 읊조림)로 불쾌부조화 최소화.</p>
-          <ul class="body">
-            <li><b>Listen</b>(청취) — 사용자 입력(STT 포함) 수신</li>
-            <li><b>Think</b> — LLM 스트림</li>
-            <li><b>Speak</b> — TTS/오디오 합성</li>
-            <li><b>React</b> — Lip-sync/Emotion/Gaze</li>
-            <li><b>Idle</b> — Micro-Idle</li>
-          </ul>
-        </div>
-        <div class="diagram">
-          <!-- 간단 루프 다이어그램 (SVG) -->
-          <svg viewBox="0 0 760 300" width="100%" height="auto" aria-label="Core loop diagram">
+        <div class="sl-label">Core Loop</div>
+        <div class="diagram" aria-label="Core loop diagram">
+          <svg viewBox="0 0 820 320">
             <defs>
               <style>
-                .n{font:600 12px Inter, 'Noto Sans KR', sans-serif; fill:#111}
-                .b{fill:#fff;stroke:#cfd6e4;stroke-width:1.2}
-                .a{marker-end:url(#arrow)}
+                .t{font:600 13px Inter,'Noto Sans KR',sans-serif;fill:#111}
+                .s{font:400 12px Inter,'Noto Sans KR',sans-serif;fill:#333}
+                .b{fill:#fff;stroke:#cfd6e4;stroke-width:1.4}
+                .a{marker-end:url(#arr)}
               </style>
-              <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+              <marker id="arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
                 <polygon points="0,0 10,4 0,8" fill="#333"/>
               </marker>
             </defs>
             <!-- Nodes -->
-            <rect class="b" x="20"  y="110" rx="8" ry="8" width="120" height="60"/><text class="n" x="80"  y="145" text-anchor="middle">Listen (STT)</text>
-            <rect class="b" x="170" y="110" rx="8" ry="8" width="120" height="60"/><text class="n" x="230" y="145" text-anchor="middle">Think (LLM)</text>
-            <rect class="b" x="320" y="110" rx="8" ry="8" width="120" height="60"/><text class="n" x="380" y="145" text-anchor="middle">Speak (TTS)</text>
-            <rect class="b" x="470" y="110" rx="8" ry="8" width="120" height="60"/><text class="n" x="530" y="136" text-anchor="middle">React</text>
-            <text class="n" x="530" y="154" text-anchor="middle" style="font-weight:400">Lip/Emo/Gaze</text>
-            <rect class="b" x="620" y="110" rx="8" ry="8" width="120" height="60"/><text class="n" x="680" y="145" text-anchor="middle">Idle</text>
+            <rect class="b" x="20"  y="120" rx="10" ry="10" width="130" height="68"/><text class="t" x="85"  y="150" text-anchor="middle">Listen (STT)</text>
+            <rect class="b" x="170" y="120" rx="10" ry="10" width="130" height="68"/><text class="t" x="235" y="150" text-anchor="middle">Think (LLM)</text>
+            <rect class="b" x="320" y="120" rx="10" ry="10" width="130" height="68"/><text class="t" x="385" y="150" text-anchor="middle">Speak (TTS)</text>
+            <rect class="b" x="470" y="120" rx="10" ry="10" width="130" height="68"/>
+            <text class="t" x="535" y="143" text-anchor="middle">React</text>
+            <text class="s" x="535" y="163" text-anchor="middle">Lip / Emotion / Gaze</text>
+            <rect class="b" x="620" y="120" rx="10" ry="10" width="130" height="68"/><text class="t" x="685" y="150" text-anchor="middle">Idle</text>
             <!-- Arrows -->
-            <line class="a" x1="140" y1="140" x2="170" y2="140" stroke="#333" stroke-width="1.2"/>
-            <line class="a" x1="290" y1="140" x2="320" y2="140" stroke="#333" stroke-width="1.2"/>
-            <line class="a" x1="440" y1="140" x2="470" y2="140" stroke="#333" stroke-width="1.2"/>
-            <line class="a" x1="590" y1="140" x2="620" y2="140" stroke="#333" stroke-width="1.2"/>
-            <path class="a" d="M 620 172 C 540 260, 200 260, 140 172" fill="none" stroke="#333" stroke-width="1.2"/>
+            <line class="a" x1="150" y1="154" x2="170" y2="154" stroke="#333" stroke-width="1.4"/>
+            <line class="a" x1="300" y1="154" x2="320" y2="154" stroke="#333" stroke-width="1.4"/>
+            <line class="a" x1="450" y1="154" x2="470" y2="154" stroke="#333" stroke-width="1.4"/>
+            <line class="a" x1="600" y1="154" x2="620" y2="154" stroke="#333" stroke-width="1.4"/>
+            <path class="a" d="M 620 200 C 540 288, 210 288, 150 200" fill="none" stroke="#333" stroke-width="1.4"/>
+            <!-- Note -->
+            <text class="s" x="410" y="300" text-anchor="middle">Back-channel barks (끄덕/짧은 읊조림)로 침묵 구간 이질감 완화</text>
           </svg>
+        </div>
+        <div>
+          <h2 class="h2">Listen → Think → Speak → React → Idle<br><span style="font-weight:600;font-size:16px;color:#333">듣기 → 생각 → 말하기 → 반응 → 대기</span></h2>
+          <hr class="rule">
+          <p class="body">침묵 구간에는 <b>Back-channel</b>을 활용해 불쾌부조화를 최소화합니다.</p>
         </div>
       </section>
 
-      <!-- s6 Runtime Director (State Machine + STT & Gaze Sync) -->
+      <!-- s6 Runtime Director (STT & Gaze Sync diagram 크게) -->
       <section class="slide s-two" data-slide="6" aria-label="Runtime Director">
-        <div>
-          <span class="tag">Runtime Director</span>
-          <h2 class="h2">State Machine & Latency Budget</h2>
-          <hr class="rule">
-          <ul class="body">
-            <li>States: <b>Idle ↔ Listening ↔ Thinking ↔ Speaking ↔ Reacting</b></li>
-            <li><b>Latency Budget</b>: 자막/발화/표정 페이싱 동기</li>
-            <li><b>Back-channel Barks</b>: 침묵 구간 긴장 완화</li>
-          </ul>
-        </div>
-        <div class="diagram" aria-label="STT & Gaze Sync pipeline diagram">
-          <!-- STT + Gaze Sync 포함 파이프라인 (SVG) -->
-          <svg viewBox="0 0 820 340" width="100%" height="auto">
+        <div class="sl-label">Runtime Director</div>
+        <div class="diagram" aria-label="STT & Gaze Sync pipeline">
+          <svg viewBox="0 0 860 360">
             <defs>
               <style>
-                .t{font:600 12px Inter, 'Noto Sans KR', sans-serif; fill:#111}
-                .s{font:400 11px Inter, 'Noto Sans KR', sans-serif; fill:#333}
-                .b{fill:#fff;stroke:#cfd6e4;stroke-width:1.2}
+                .t{font:600 13px Inter,'Noto Sans KR',sans-serif;fill:#111}
+                .s{font:400 12px Inter,'Noto Sans KR',sans-serif;fill:#333}
+                .b{fill:#fff;stroke:#cfd6e4;stroke-width:1.4}
                 .a{marker-end:url(#arr)}
               </style>
               <marker id="arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
@@ -275,180 +239,194 @@
               </marker>
             </defs>
             <!-- Inputs -->
-            <rect class="b" x="20"  y="30" rx="8" ry="8" width="150" height="54"/><text class="t" x="95" y="58" text-anchor="middle">Mic → STT</text>
-            <text class="s" x="95" y="76" text-anchor="middle">Listening / Silence timeout</text>
-            <rect class="b" x="20"  y="120" rx="8" ry="8" width="150" height="54"/><text class="t" x="95" y="147" text-anchor="middle">Text Input</text>
-            <rect class="b" x="20"  y="210" rx="8" ry="8" width="150" height="54"/><text class="t" x="95" y="237" text-anchor="middle">Camera → Gaze</text>
-            <text class="s" x="95" y="255" text-anchor="middle">u,v → Eye/Head bones</text>
+            <rect class="b" x="20"  y="30"  rx="10" ry="10" width="160" height="60"/><text class="t" x="100" y="60" text-anchor="middle">Mic → STT</text>
+            <text class="s" x="100" y="78" text-anchor="middle">Listening / Silence timeout</text>
+            <rect class="b" x="20"  y="120" rx="10" ry="10" width="160" height="60"/><text class="t" x="100" y="150" text-anchor="middle">Text Input</text>
+            <rect class="b" x="20"  y="210" rx="10" ry="10" width="160" height="60"/><text class="t" x="100" y="238" text-anchor="middle">Camera → Gaze</text>
+            <text class="s" x="100" y="256" text-anchor="middle">u,v → Eye/Head bones</text>
             <!-- LLM -->
-            <rect class="b" x="220" y="75" rx="8" ry="8" width="150" height="60"/><text class="t" x="295" y="108" text-anchor="middle">LLM (stream)</text>
+            <rect class="b" x="220" y="90" rx="10" ry="10" width="170" height="70"/><text class="t" x="305" y="125" text-anchor="middle">LLM (stream)</text>
             <!-- Orchestration -->
-            <rect class="b" x="410" y="75" rx="8" ry="8" width="180" height="100"/><text class="t" x="500" y="100" text-anchor="middle">Orchestration</text>
-            <text class="s" x="500" y="118" text-anchor="middle">OnFinal / Chunk-Coalesce Gate</text>
-            <text class="s" x="500" y="134" text-anchor="middle">Latency Budget / UI Reveal</text>
-            <!-- Audio/Anim -->
-            <rect class="b" x="630" y="30" rx="8" ry="8" width="170" height="54"/><text class="t" x="715" y="58" text-anchor="middle">TTS</text>
-            <rect class="b" x="630" y="120" rx="8" ry="8" width="170" height="54"/><text class="t" x="715" y="150" text-anchor="middle">OVRLipSync</text>
-            <rect class="b" x="630" y="210" rx="8" ry="8" width="170" height="54"/><text class="t" x="715" y="237" text-anchor="middle">AnimBP (ARKit)</text>
+            <rect class="b" x="420" y="90" rx="10" ry="10" width="200" height="120"/><text class="t" x="520" y="114" text-anchor="middle">Orchestration</text>
+            <text class="s" x="520" y="134" text-anchor="middle">OnFinal / Chunk-Coalesce Gate</text>
+            <text class="s" x="520" y="152" text-anchor="middle">Latency Budget / UI Reveal</text>
+            <!-- Audio / Anim -->
+            <rect class="b" x="650" y="30"  rx="10" ry="10" width="180" height="60"/><text class="t" x="740" y="64" text-anchor="middle">TTS</text>
+            <rect class="b" x="650" y="120" rx="10" ry="10" width="180" height="60"/><text class="t" x="740" y="152" text-anchor="middle">OVRLipSync</text>
+            <rect class="b" x="650" y="210" rx="10" ry="10" width="180" height="60"/><text class="t" x="740" y="242" text-anchor="middle">AnimBP (ARKit)</text>
             <!-- Connections -->
-            <line class="a" x1="170" y1="57"  x2="220" y2="96" stroke="#333" stroke-width="1.2"/>
-            <line class="a" x1="170" y1="147" x2="220" y2="105" stroke="#333" stroke-width="1.2"/>
-            <line class="a" x1="170" y1="237" x2="410" y2="125" stroke="#333" stroke-width="1.2"/>
-            <line class="a" x1="370" y1="105" x2="410" y2="105" stroke="#333" stroke-width="1.2"/>
-            <line class="a" x1="590"  y1="105" x2="630" y2="57" stroke="#333" stroke-width="1.2"/>
-            <line class="a" x1="590"  y1="125" x2="630" y2="147" stroke="#333" stroke-width="1.2"/>
-            <line class="a" x1="590"  y1="145" x2="630" y2="237" stroke="#333" stroke-width="1.2"/>
+            <line class="a" x1="180" y1="60"  x2="220" y2="125" stroke="#333" stroke-width="1.4"/>
+            <line class="a" x1="180" y1="150" x2="220" y2="125" stroke="#333" stroke-width="1.4"/>
+            <line class="a" x1="180" y1="240" x2="420" y2="150" stroke="#333" stroke-width="1.4"/>
+            <line class="a" x1="390" y1="125" x2="420" y2="125" stroke="#333" stroke-width="1.4"/>
+            <line class="a" x1="620" y1="125" x2="650" y2="60"  stroke="#333" stroke-width="1.4"/>
+            <line class="a" x1="620" y1="150" x2="650" y2="150" stroke="#333" stroke-width="1.4"/>
+            <line class="a" x1="620" y1="175" x2="650" y2="240" stroke="#333" stroke-width="1.4"/>
           </svg>
+        </div>
+        <div>
+          <h2 class="h2">State Machine & Latency Budget<br><span style="font-weight:600;font-size:16px;color:#333">상태기계 & 지연 버짓</span></h2>
+          <hr class="rule">
+          <ul class="body">
+            <li>States: <b>Idle ↔ Listening ↔ Thinking ↔ Speaking ↔ Reacting</b></li>
+            <li><b>Back-channel</b>로 침묵 구간 연결성 확보</li>
+          </ul>
         </div>
       </section>
 
-      <!-- s7 Orchestration -->
+      <!-- s7 Orchestration (시간축/버퍼/딜레이 표기) -->
       <section class="slide s-two" data-slide="7" aria-label="Orchestration">
-        <div>
-          <span class="tag">Orchestration</span>
-          <h2 class="h2">OnFinal / Coalesce Gate, Viseme & Emotion Smoothing</h2>
-          <hr class="rule">
-          <ul class="body">
-            <li><b>합성 트리거</b>: (a) <b>OnFinal</b> 수신, (b) 짧은 청크 <b>Coalesce 임계</b> 충족</li>
-            <li><b>Viseme</b> attack/release/LPF + <b>Emotion</b> ease → <b>Uncanny Fatigue</b> 저감</li>
-            <li><b>UI Reveal / Back-channel</b>로 침묵 구간 연결성 확보</li>
-          </ul>
-        </div>
-        <div class="diagram">
-          <!-- 간단 타임라인 도식 -->
-          <svg viewBox="0 0 820 240" width="100%" height="auto" aria-label="Orchestration timeline">
+        <div class="sl-label">Orchestration</div>
+        <div class="diagram" aria-label="Orchestration timeline with time axis">
+          <svg viewBox="0 0 860 280">
             <defs>
               <style>
-                .t{font:600 12px Inter,'Noto Sans KR',sans-serif;fill:#111}
-                .s{font:400 11px Inter,'Noto Sans KR',sans-serif;fill:#333}
-                .bar{fill:#eef1f6;stroke:#cfd6e4;stroke-width:1.2}
-                .gate{fill:#ffd;stroke:#e6cf80;stroke-width:1}
+                .t{font:600 13px Inter,'Noto Sans KR',sans-serif;fill:#111}
+                .s{font:400 12px Inter,'Noto Sans KR',sans-serif;fill:#333}
+                .bar{fill:#eef1f6;stroke:#cfd6e4;stroke-width:1.4}
+                .gate{fill:#fff4cc;stroke:#e2c35c;stroke-width:1.2}
+                .axis{stroke:#bbb;stroke-width:1}
               </style>
             </defs>
-            <text class="t" x="20" y="22">LLM Stream</text>
-            <rect class="bar" x="120" y="10" width="560" height="16"/>
-            <rect class="gate" x="300" y="8" width="6" height="20"/><text class="s" x="290" y="40">OnFinal</text>
-            <rect class="gate" x="210" y="8" width="6" height="20"/><text class="s" x="190" y="40">Coalesce</text>
+            <!-- Time axis -->
+            <line class="axis" x1="120" y1="30" x2="780" y2="30"/>
+            <text class="s" x="120" y="22">0.0s</text>
+            <text class="s" x="220" y="22">0.5s</text>
+            <text class="s" x="320" y="22">1.0s</text>
+            <text class="s" x="420" y="22">1.5s</text>
+            <text class="s" x="520" y="22">2.0s</text>
+            <text class="s" x="620" y="22">2.5s</text>
+            <text class="s" x="720" y="22">3.0s</text>
 
-            <text class="t" x="20" y="92">TTS Synthesis</text>
-            <rect class="bar" x="210" y="80" width="220" height="16"/>
-            <text class="t" x="20" y="142">Lip-sync (Viseme)</text>
-            <rect class="bar" x="220" y="130" width="220" height="16"/>
-            <text class="t" x="20" y="192">Emotion</text>
-            <rect class="bar" x="230" y="180" width="220" height="16"/>
+            <!-- LLM stream -->
+            <text class="t" x="20" y="70">LLM Stream</text>
+            <rect class="bar" x="120" y="56" width="640" height="18"/>
+            <!-- Gates -->
+            <rect class="gate" x="210" y="54" width="6" height="22"/><text class="s" x="205" y="90">Coalesce ~0.25s(예)</text>
+            <rect class="gate" x="300" y="54" width="6" height="22"/><text class="s" x="290" y="110">OnFinal</text>
+
+            <!-- TTS / Lip / Emotion -->
+            <text class="t" x="20" y="150">TTS</text>
+            <rect class="bar" x="210" y="136" width="230" height="18"/>
+            <text class="t" x="20" y="190">Lip-sync (Viseme)</text>
+            <rect class="bar" x="220" y="176" width="230" height="18"/>
+            <text class="t" x="20" y="230">Emotion</text>
+            <rect class="bar" x="230" y="216" width="230" height="18"/>
+            <text class="s" x="470" y="230">Emotion Delay ~0.5s(예)</text>
           </svg>
         </div>
-      </section>
-
-      <!-- s8 Tech Proof -->
-      <section class="slide s-one" data-slide="8" aria-label="Tech proof">
         <div>
-          <span class="tag">Tech Proof</span>
-          <h2 class="h2">What’s working now</h2>
+          <h2 class="h2">OnFinal / Coalesce Gate, Viseme & Emotion Smoothing<br>
+            <span style="font-weight:600;font-size:16px;color:#333">합성 트리거·스무딩으로 ‘툭툭’ 끊김 최소화</span></h2>
           <hr class="rule">
-          <ul class="body">
-            <li>Local LLM 스트림 / TTS / OVRLipSync / ARKit 커브 / Micro-Idle / Subtitle Sync</li>
-            <li>모듈형 어댑터(모델 교체 용이), Persona/Scenario Profiles로 톤·금칙·지식 경계 관리</li>
-          </ul>
-          <div class="cards" style="margin-top:10px">
-            <a class="card" href="https://youtu.be/FwiWDV9LYas" target="_blank" rel="noopener">
-              <b>Prototype Demo</b><span class="muted">YouTube</span>
-            </a>
-            <a class="card" href="https://youtu.be/AUik19Bm5PI" target="_blank" rel="noopener">
-              <b>Vision Video</b><span class="muted">YouTube</span>
-            </a>
-            <a class="card" href="https://youtu.be/XkNIi9d-ayc" target="_blank" rel="noopener">
-              <b>EdTech Showcase</b><span class="muted">YouTube</span>
-            </a>
-          </div>
+          <p class="body">버퍼/딜레이 값은 <b>프리셋</b>·<b>상황</b>에 따라 조정합니다.</p>
         </div>
       </section>
 
-      <!-- s9 Use-cases -->
-      <section class="slide s-two" data-slide="9" aria-label="Use cases">
+      <!-- s8 Tech Proof (Main UI 이미지) -->
+      <section class="slide s-two" data-slide="8" aria-label="Tech Proof">
+        <div class="sl-label">Tech Proof</div>
         <div>
-          <span class="tag">Use-cases</span>
-          <h2 class="h2">튜토리얼 / 허브 NPC / 도슨트 / GM 라이브 호스트</h2>
+          <h2 class="h2">현재 동작 — LLM/TTS/Lip/Emotion/Subtitle<br><span style="font-weight:600;font-size:16px;color:#333">실시간 동기·오케스트레이션</span></h2>
           <hr class="rule">
           <ul class="body">
-            <li><b>튜토리얼 가이드</b> — 첫 10분의 진입 마찰 낮춤</li>
-            <li><b>허브 NPC</b> — 반복 접점에서 관계감 축적</li>
-            <li><b>도슨트</b> — 월드빌딩/지식 전달의 설득력 강화</li>
-            <li><b>GM 이벤트 호스트</b> — 라이브 커뮤니티 운영</li>
+            <li>Local LLM 스트림, OVRLipSync, ARKit 커브, Micro-Idle, Subtitle Sync</li>
+            <li>모듈형 어댑터 / Persona·Scenario Profiles로 톤·금칙·지식 경계 관리</li>
           </ul>
         </div>
         <div class="media">
-          <!-- 업로드: s9-usecases.jpg -->
-          <img src="s9-usecases.jpg" alt="Use cases montage">
+          <!-- 업로드: s8-ui.jpg -->
+          <img src="s8-ui.jpg" alt="Main runtime UI">
+        </div>
+      </section>
+
+      <!-- s9 Integration & Extensions -->
+      <section class="slide s-two" data-slide="9" aria-label="Integration">
+        <div class="sl-label">Integration & Extensions</div>
+        <div>
+          <h2 class="h2">엔진 통합 & 확장<br><span style="font-weight:600;font-size:16px;color:#333">LLMClientComponent / Emergent Dialogue / Plugin</span></h2>
+          <hr class="rule">
+          <ul class="body">
+            <li><b>LLMClientComponent</b>로 <b>NPC 확장</b> 용이 — 다수 NPC에 동일 런타임 적용</li>
+            <li><b>AI-NPC ↔ AI-NPC 대화</b> 기반 <b>창발적 서사</b> 확장 가능</li>
+            <li><b>UE5 Plugin</b> 구성으로 프로젝트 간 <b>재사용</b>·다른 콘텐츠에 <b>신속 적용</b></li>
+          </ul>
+        </div>
+        <div class="media">
+          <img src="s9-arch.jpg" alt="Integration & plugin architecture">
         </div>
       </section>
 
       <!-- s10 Mini-Project: The Conversation -->
       <section class="slide s-two" data-slide="10" aria-label="Mini project">
+        <div class="sl-label">Mini-Project</div>
         <div>
-          <span class="tag">Mini-Project</span>
-          <h2 class="h2">“The Conversation” — Q1 목표</h2>
+          <h2 class="h2">“The Conversation” — 내러티브 실험<br><span style="font-weight:600;font-size:16px;color:#333">대화만으로 진행·긴장감/몰입 극대화</span></h2>
           <hr class="rule">
-          <p class="body">선택/감정 반응/관계치 변화에 기반한 짧은 내러티브. <b>TFP → Vertical Slice</b>로 지표(체류/회차/중단율) 측정.</p>
-          <div class="cta-row" style="margin-top:10px">
-            <a class="btn ghost" href="the-conversation.pdf" target="_blank" rel="noopener">Concept&nbsp;Brief (PDF)</a>
-            <a class="btn" href="tc-mood.jpg" target="_blank" rel="noopener">Mood&nbsp;Board</a>
-          </div>
+          <p class="body">LLM NPC의 장점을 극대화한 짧은 내러티브. 플레이어의 발화와 감정에 반응하며 <b>대화만으로</b> 이야기가 전개됩니다.</p>
+          <p class="body">콘셉트/무드 자료: <a href="the-conversation.pdf" target="_blank" rel="noopener">Concept Brief (PDF)</a>, <a href="tc-mood.jpg" target="_blank" rel="noopener">Mood Board</a></p>
         </div>
         <div class="media">
-          <!-- 업로드: s10-tc.jpg -->
           <img src="s10-tc.jpg" alt="The Conversation key art">
         </div>
       </section>
 
-      <!-- s11 Roadmap & KPIs -->
-      <section class="slide s-one" data-slide="11" aria-label="Roadmap and KPIs">
+      <!-- s11 Roadmap (11월/12월/1월) -->
+      <section class="slide s-one" data-slide="11" aria-label="Roadmap">
+        <div class="sl-label">Roadmap</div>
         <div>
-          <span class="tag">Roadmap & KPIs</span>
-          <h2 class="h2">M0–M3 단계 / 리스크 체크포인트</h2>
+          <h2 class="h2">Roadmap — 11월 / 12월 / 1월</h2>
           <hr class="rule">
-          <div class="body" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="body" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
             <div>
-              <b>Roadmap</b>
+              <b>11월 — 시스템 품질 정비</b>
               <ul>
-                <li><b>M0–M1</b> — First-Playable (한 캐릭터/한 씬), 기술 리스크 확인</li>
-                <li><b>M2</b> — Vertical Slice (튜토리얼/허브), KPI 측정</li>
-                <li><b>M3</b> — Tooling(프로필/시나리오), 디자이너 워크플로</li>
-                <li><b>M4</b> — 플랫폼 적응(콘솔/모바일) + QA/운영 가이드</li>
+                <li>STT 입력(청취·타임아웃·전환 규칙)</li>
+                <li>Gaze Sync 1차(u,v→Eye/Head + 스무딩)</li>
+                <li>UI 상태: Listening / Thinking / Speaking, 백채널 패턴</li>
+                <li>성능/레이턴시 개선(청크 결합·페이싱 버짓)</li>
+                <li>Lip-sync 튐 완화(attack/release·LPF·이징)</li>
+                <li>Emotion 커브 전이 규칙 정립</li>
               </ul>
             </div>
             <div>
-              <b>KPIs</b>
-              <div class="kpi" style="margin-top:6px">
-                <div class="card"><b>Presence Score</b><span class="muted">설문+행동 혼합</span></div>
-                <div class="card"><b>Dwell Time</b><span class="muted">체류/재방문</span></div>
-                <div class="card"><b>Turn-Cut Rate</b><span class="muted">중단율</span></div>
-                <div class="card"><b>Latency Budget</b><span class="muted">타이밍 준수율</span></div>
-              </div>
+              <b>12월 — 패키징 & 평가</b>
+              <ul>
+                <li>런처·프리셋 번들(데모/전시, 로깅 옵션)</li>
+                <li>파일럿 평가: 존재감·불쾌부조화·이해도 지표</li>
+                <li>Creative Award 등 출품 자료 정리</li>
+              </ul>
+            </div>
+            <div>
+              <b>1월 — PoC & 현장 운용</b>
+              <ul>
+                <li>PoC 가이드(하드웨어/카메라/네트워크/조도)</li>
+                <li>운영 시나리오(오프라인 폴백, 정책/시나리오 롤백, 로그/리플레이)</li>
+              </ul>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- s12 Ask / Next Steps -->
-      <section class="slide s-one s-center" data-slide="12" aria-label="Ask">
-        <div>
-          <span class="tag">Next Steps</span>
-          <h2 class="h2">Ask — 파일럿 제안</h2>
-          <hr class="rule">
-          <p class="body">옵션 A) <b>2주 Tech Spike</b> (UE5 플러그인 형태 성능 검증)<br>옵션 B) <b>4–6주 Vertical Slice</b> (튜토리얼/허브 한 씬 지표 측정)</p>
-          <div class="cta-row" style="margin-top:12px;justify-content:center">
-            <a class="btn" href="../" rel="noopener">Back to Main</a>
-            <a class="btn ghost" href="mailto:dluca.ailab@gmail.com">Contact</a>
-            <a class="btn ghost" href="executive-summary.pdf" target="_blank" rel="noopener">Executive Summary</a>
+      <!-- s12 Contacts (Ask 제거) -->
+      <section class="slide s-one" data-slide="12" aria-label="Contacts">
+        <div class="sl-label">Contacts</div>
+        <div style="text-align:center">
+          <h2 class="h2">안준희 · An Junhee</h2>
+          <p class="body" style="margin:6px 0 10px">SNU Visual Communication Design (2024.02)</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
+            <a class="card" href="../" rel="noopener" style="text-decoration:none"><b>Back to Main</b><span class="body">메인 페이지</span></a>
+            <a class="card" href="https://junheean.github.io/junhee/" target="_blank" rel="noopener" style="text-decoration:none"><b>About me</b><span class="body">junheean.github.io/junhee/</span></a>
+            <a class="card" href="executive-summary.pdf" target="_blank" rel="noopener" style="text-decoration:none"><b>Executive Summary</b><span class="body">PDF</span></a>
+            <a class="card" href="mailto:dluca.ailab@gmail.com" style="text-decoration:none"><b>Email</b><span class="body">dluca.ailab@gmail.com</span></a>
+            <a class="card" href="https://www.instagram.com/d.luca0/" target="_blank" rel="noopener" style="text-decoration:none"><b>Instagram</b><span class="body">@d.luca0</span></a>
           </div>
-          <p class="muted" style="margin-top:12px">안준희 · An Junhee — SNU Visual Communication Design (2024.02) — @d.luca0</p>
         </div>
       </section>
 
     </div>
 
-    <!-- Arrows (옅게 표시, hover 시 선명) -->
+    <!-- Arrows -->
     <div class="nav" aria-hidden="false">
       <button class="arrow" id="prev" aria-label="이전 슬라이드">
         <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
@@ -458,7 +436,7 @@
       </button>
     </div>
 
-    <!-- Slide counter (아주 작게) -->
+    <!-- Slide counter -->
     <div class="counter" id="counter" aria-live="polite">1 / 12</div>
   </div>
 </main>
@@ -466,57 +444,56 @@
 <footer class="footer">© D-LUCA / Project LUA</footer>
 
 <script>
-  (function(){
-    const track = document.getElementById('track');
-    const counter = document.getElementById('counter');
-    const prev = document.getElementById('prev');
-    const next = document.getElementById('next');
-    const slides = Array.from(track.children);
-    const total = slides.length;
-    let idx = 0;
+(function(){
+  const track   = document.getElementById('track');
+  const counter = document.getElementById('counter');
+  const prev    = document.getElementById('prev');
+  const next    = document.getElementById('next');
+  const slides  = Array.from(track.children);
+  const total   = slides.length;
+  let idx = 0;
 
-    function go(i, pushHash=true){
-      idx = Math.max(0, Math.min(total-1, i));
-      track.style.transform = `translateX(${-idx*100}%)`;
-      counter.textContent = (idx+1) + ' / ' + total;
-      if(pushHash){ location.hash = '#s' + (idx+1); }
-      // focus 관리(접근성)
-      slides[idx].setAttribute('tabindex','0'); slides[idx].focus({preventScroll:true});
-      slides.forEach((s,si)=>{ if(si!==idx) s.removeAttribute('tabindex'); });
+  function updateArrows(){
+    // 처음 슬라이드: 왼쪽 화살표 숨김 / 마지막: 오른쪽 숨김
+    prev.classList.toggle('hidden', idx===0);
+    next.classList.toggle('hidden', idx===total-1);
+  }
+
+  function go(i, pushHash=true){
+    idx = Math.max(0, Math.min(total-1, i));
+    track.style.transform = `translateX(${-idx*100}%)`;
+    counter.textContent = (idx+1)+' / '+total;
+    if(pushHash){ location.hash = '#s'+(idx+1); }
+    slides[idx].setAttribute('tabindex','0'); slides[idx].focus({preventScroll:true});
+    slides.forEach((s,si)=>{ if(si!==idx) s.removeAttribute('tabindex'); });
+    updateArrows();
+  }
+
+  function initFromHash(){
+    const m = location.hash.match(/^#s(\d{1,2})$/i);
+    if(m){
+      const n = parseInt(m[1],10);
+      if(n>=1 && n<=total){ go(n-1,false); return; }
     }
+    go(0,false);
+  }
 
-    // 해시 진입 지원 (#s1..#s12)
-    function initFromHash(){
-      const m = location.hash.match(/^#s(\d{1,2})$/i);
-      if(m){
-        const n = parseInt(m[1],10);
-        if(n>=1 && n<=total){ go(n-1,false); return; }
-      }
-      go(0,false);
-    }
+  prev.addEventListener('click', ()=>go(idx-1));
+  next.addEventListener('click', ()=>go(idx+1));
+  document.addEventListener('keydown', (e)=>{
+    if(e.key==='ArrowLeft') go(idx-1);
+    else if(e.key==='ArrowRight') go(idx+1);
+  });
+  window.addEventListener('hashchange', initFromHash);
 
-    // 버튼/키보드
-    prev.addEventListener('click', ()=>go(idx-1));
-    next.addEventListener('click', ()=>go(idx+1));
-    document.addEventListener('keydown', (e)=>{
-      if(e.key === 'ArrowLeft') go(idx-1);
-      else if(e.key === 'ArrowRight') go(idx+1);
-    });
-    window.addEventListener('hashchange', initFromHash);
+  // Swipe
+  let startX=0, dx=0, touching=false;
+  track.addEventListener('touchstart', (e)=>{ touching=true; startX=e.touches[0].clientX; dx=0; }, {passive:true});
+  track.addEventListener('touchmove',  (e)=>{ if(!touching) return; dx=e.touches[0].clientX-startX; }, {passive:true});
+  track.addEventListener('touchend',   ()=>{ touching=false; if(Math.abs(dx)>60){ if(dx<0) go(idx+1); else go(idx-1);} dx=0; });
 
-    // 터치 스와이프
-    let startX=0, dx=0, touching=false;
-    track.addEventListener('touchstart', (e)=>{ touching=true; startX=e.touches[0].clientX; dx=0; }, {passive:true});
-    track.addEventListener('touchmove', (e)=>{ if(!touching) return; dx=e.touches[0].clientX-startX; }, {passive:true});
-    track.addEventListener('touchend', ()=>{
-      touching=false;
-      if(Math.abs(dx) > 60){ if(dx<0) go(idx+1); else go(idx-1); }
-      dx=0;
-    });
-
-    // 초기화
-    initFromHash();
-  })();
+  initFromHash();
+})();
 </script>
 </body>
 </html>
