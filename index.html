@@ -66,12 +66,23 @@
       .page-title{font-size:34px; margin:12px 0 6px;}
     }
 
-    /* ---- Hero (확대) ---- */
-    .hero{margin:0}
+    /* ---- Hero (확대 + 우측 상단 링크 버튼) ---- */
+    .hero{margin:0; position:relative;}
     .hero img{
       display:block; width:100%; height:auto;
       border:1px solid var(--line);
     }
+    .hero-cta{
+      position:absolute; z-index:1; top:10px; right:10px;
+      background:#111; color:#fff;
+      border:1px solid rgba(255,255,255,.85);
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:.82rem; line-height:1;
+      text-decoration:none; opacity:.92;
+      backdrop-filter:blur(2px);
+    }
+    .hero-cta:hover{opacity:1; text-decoration:none}
 
     /* ---- Tagline (중앙, 두 줄, 세로선) ---- */
     .tag-wrap{max-width:var(--maxw); margin:12px auto 8px; padding:0 18px}
@@ -153,6 +164,7 @@
 
       /* 히어로 주변 간소화 */
       .hero img{ border-width:0; }
+      .hero-cta{ top:8px; right:8px; font-size:.8rem; padding:6px 10px; }
 
       /* 태그라인 간격 */
       .tagline em{ font-size:.98rem; }
@@ -217,8 +229,9 @@
   <h1 class="page-title">Project LUA</h1>
 </div>
 
-<!-- Hero (더 크게: 이미지 원본비 유지, 전체폭) -->
+<!-- Hero (우측 상단에 작은 링크 버튼 추가) -->
 <figure class="hero">
+  <a class="hero-cta" href="game/" aria-label="Game Studio Slides로 이동">Game Studio Slides&nbsp;&gt;</a>
   <img src="hero.jpg" alt="Project LUA banner">
 </figure>
 
@@ -251,7 +264,7 @@
 
 <hr class="rule edge">
 
-<!-- Definition (좌: 제목 넓게 / 우: 내용 좁게, 상단선 맞춤) -->
+<!-- Definition -->
 <section id="definition" class="wrap section" style="--labelw:260px">
   <div class="twocol">
     <div class="label">Definition</div>
@@ -269,7 +282,7 @@
 
 <hr class="rule edge">
 
-<!-- Problem | Solution (좌/우, 가운데 세로선 + 각 타이틀 밑 짧은 라인) -->
+<!-- Problem | Solution -->
 <section id="ps" class="wrap section">
   <div class="split">
     <div class="body">
@@ -298,7 +311,7 @@
 
 <hr class="rule edge">
 
-<!-- System Architecture (상위 타이틀, 하위: Runtime / Orchestration) -->
+<!-- System Architecture -->
 <section id="system" class="wrap section">
   <div class="twocol">
     <div class="label">System Architecture</div>
@@ -328,7 +341,7 @@
 
 <hr class="rule edge">
 
-<!-- Roadmap (데스크톱: 우 제목 / 좌 내용, 모바일: 제목이 내용 위로) -->
+<!-- Roadmap -->
 <section id="roadmap" class="wrap section">
   <div class="twocol rev" style="grid-template-columns: 1fr 1px var(--labelw);">
     <div class="body">
@@ -389,4 +402,3 @@
 
 </body>
 </html>
-
