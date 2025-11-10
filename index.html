@@ -4,410 +4,389 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Project LUA — D-LUCA</title>
-  <meta name="description" content="Project LUA: On-Screen Dialogue NPC Toolkit for real presence and conversation.">
+  <meta name="description" content="Project LUA: 보이는 대화를 지향하는 실시간 디지털 휴먼 연구/프로토타입.">
   <meta name="theme-color" content="#f7f9fb">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
+    /* ---- Theme ---- */
     :root{
-      --bg:#f7f9fb;      /* 옅은 블루 틴트 화이트 */
-      --fg:#111;
-      --muted:#2a2a2a;
-      --subtle:#666;
-      --line:rgba(17,17,17,.16);
-      --edge:16px;
-      --maxw:980px;      /* 슬라이드 내부 컨텐트 폭 */
-      --radius:14px;
-      --btn:#222;        /* CTA 버튼(어두운 회색) */
-      --btnText:#fff;
+      --bg:#f7f9fb;                 /* 옅은 블루 틴트 화이트 */
+      --fg:#111;                    /* 본문(거의 검정) */
+      --muted:#2a2a2a;              /* 본문 텍스트 */
+      --subtle:#666;                /* 보조 텍스트 */
+      --line:rgba(17,17,17,.16);    /* 얇은 경계선 */
+      --maxw:800px;                 /* 본문 폭 */
+      --labelw:180px;               /* 좌측 제목 칼럼 기본 폭 */
+      --gap:24px;
+      --edge:16px;                  /* 좌/우 외곽 여백 (타이틀/구분선 정렬 기준) */
     }
     *{box-sizing:border-box}
-    html,body{margin:0;background:var(--bg);color:var(--fg);
+    html,body{
+      margin:0; background:var(--bg); color:var(--fg);
       font-family:'Inter','Noto Sans KR',system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Malgun Gothic,sans-serif;
-      line-height:1.65}
-    a{color:inherit;text-decoration:none}
+      line-height:1.65;
+    }
+    a{color:inherit; text-decoration:none}
     a:hover{text-decoration:underline}
-    img{max-width:100%;height:auto;display:block}
+    html{scroll-behavior:smooth}
+    section[id]{scroll-margin-top:84px}
 
-    /* Header */
+    /* ---- Header ---- */
     .header{
-      position:sticky;top:0;z-index:50;
+      position:sticky; top:0; z-index:50;
       backdrop-filter:saturate(1.05) blur(6px);
       background:rgba(247,249,251,.86);
       border-bottom:1px solid var(--line);
     }
     .header-inner{
-      padding:10px 32px 10px 16px;
-      display:flex;align-items:center;gap:12px
+      width:100%;
+      padding:10px 36px 10px 16px;  /* 왼쪽/오른쪽 멀리 밀기 */
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
-    .brand{font-weight:800;font-size:.95rem;letter-spacing:.1px;margin-right:auto}
-    .menu{display:flex;gap:18px;align-items:center}
-    .menu a{font-size:.86rem;color:var(--subtle)}
-    .menu a:hover{color:var(--fg)}
+    .brand{font-weight:800; font-size:.95rem; letter-spacing:.1px;}
+    .menu{display:flex; gap:18px; align-items:center; margin-left:auto}
+    .menu a{font-size:.86rem; color:var(--subtle)}
+    .menu a:focus,.menu a:hover{color:var(--fg)}
 
-    /* Slider layout */
-    .viewport{position:relative;overflow:hidden}
-    .track{
-      display:flex;will-change:transform;
-      transition:transform .45s cubic-bezier(.22,.61,.36,1);
-      touch-action:pan-y; /* 수직 스크롤 허용, 가로는 JS로 처리 */
-    }
-    .slide{
-      flex:0 0 100vw;        /* 항상 뷰포트 폭 */
-      min-height:calc(100dvh - 60px); /* 헤더 제외 꽉 차게 */
-      display:grid;place-items:center;
-      padding:24px;
-    }
-    .card{
-      width:min(100%, var(--maxw));
-      padding:22px clamp(14px,3vw,28px);
-      background:#fff;border:1px solid var(--line);border-radius:var(--radius);
-      box-shadow:0 10px 40px rgba(0,0,0,.04);
-    }
-    .title{
-      font-weight:200;letter-spacing:-.2px;
-      font-size: clamp(34px, 6vw, 56px); line-height:1.05; margin:0 0 8px;
-    }
-    .hero{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:6px 0 14px}
-    .tag{
-      display:flex;flex-direction:column;align-items:center;gap:12px;margin:10px 0 2px;text-align:center;color:#151515;
-    }
-    .tag em{font-style:italic;font-weight:200}
-    .tag .sep{width:1px;height:22px;background:#151515;opacity:.45}
+    /* ---- Containers ---- */
+    .wrap{max-width:var(--maxw); margin:0 auto; padding:0 18px}
+    .edge-row{padding:0 var(--edge);} /* 타이틀 좌측 정렬 기준 */
+    .rule{border:0; border-top:1px solid var(--line); margin:28px auto}
+    .rule.edge{width:calc(100% - (var(--edge) * 2)); margin-left:auto; margin-right:auto;} /* 좌/우 여백 남김 */
+    h1,h2,h3{margin:0}
 
-    .lead{margin:0 auto 12px;max-width:72ch;color:var(--muted);text-align:center}
+    /* ---- Page Title ---- */
+    .page-title{
+      font-weight:200; letter-spacing:-.2px;
+      font-size:54px; line-height:1.05;
+      margin:18px 0 6px; /* 이미지 바로 위에 오도록 살짝 내림 */
+    }
+    @media (max-width:720px){
+      :root{ --edge:12px; }
+      .page-title{font-size:34px; margin:12px 0 6px;}
+    }
 
-    .ctas{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:12px}
+    /* ---- Hero (확대) ---- */
+    .hero{margin:0}
+    .hero img{
+      display:block; width:100%; height:auto;
+      border:1px solid var(--line);
+    }
+
+    /* ---- Tagline (중앙, 두 줄, 세로선) ---- */
+    .tag-wrap{max-width:var(--maxw); margin:12px auto 8px; padding:0 18px}
+    .tagline{
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center; color:#151515;
+    }
+    .tagline em{
+      font-style:italic; font-weight:200; letter-spacing:.2px; font-size:1.02rem;
+    }
+    .tagline .sep{
+      width:1px; height:22px; background:#151515; opacity:.45; margin:14px 0; display:inline-block;
+    }
+
+    /* ---- Overview CTA 버튼(밝은 검정, 더 작게) ---- */
+    .cta-row{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:12px}
     .btn{
-      background:var(--btn);color:var(--btnText);
-      border:1px solid rgba(255,255,255,.85);border-radius:12px;
-      padding:9px 14px;font-size:.92rem;white-space:nowrap
+      background:#222;                /* 조금 더 밝은 검정 */
+      color:#fff;
+      border:1px solid rgba(255,255,255,.8);
+      border-radius:12px;
+      padding:8px 12px;               /* 더 작게 */
+      font-size:.88rem;
+      white-space:nowrap;
     }
-    .btn:hover{border-color:#fff;text-decoration:none}
+    .btn:hover{border-color:#fff; text-decoration:none}
 
-    .h{font-weight:800;margin:0 0 8px}
-    .hr{height:1px;background:var(--line);margin:14px 0}
-    .pair{display:grid;grid-template-columns:1fr;gap:18px}
-    .twocol{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-    .bul{padding-left:18px;margin:8px 0}
-    .bul li{margin:4px 0}
-    .kv{display:grid;grid-template-columns:120px 1fr;gap:8px 14px}
+    /* ---- Two-column w/ vertical divider (desktop) ---- */
+    .section{padding:18px 0}
+    .twocol{
+      display:grid; grid-template-columns: var(--labelw) 1px 1fr; gap:var(--gap); align-items:start;
+    }
+    .vrule{width:1px; background:var(--line); min-height:100%}
+    .label{
+      color:#111; font-weight:800; font-size:1.08rem; line-height:1.3; /* 제목 더 굵고 약간 크게 */
+    }
+    .body{color:var(--muted)}
+    .narrow{max-width:60ch}
+    .body.tight{margin-top:-4px;} /* Definition 내용 위로 당김 */
+    .twocol .body > *:first-child{margin-top:0}
+
+    /* ---- Problem | Solution split (desktop) ---- */
+    .split{
+      display:grid; grid-template-columns: 1fr 1px 1fr; gap:var(--gap); align-items:start;
+    }
+    .subhead{
+      font-weight:800; font-size:1.06rem; line-height:1.3; margin-bottom:6px;
+      position:relative; display:inline-block; padding-bottom:6px;
+    }
+    .subhead::after{
+      content:""; position:absolute; left:0; bottom:0;
+      width:44px; height:1px; background:rgba(17,17,17,.35); /* 짧은 언더라인 */
+    }
+
+    /* ---- Contact key-value grid ---- */
+    .kv{
+      display:grid; grid-template-columns: 110px 1fr; gap:8px 14px; align-items:start;
+    }
     .kv b{font-weight:700}
 
-    /* Game terms tag */
-    .tag-kv{display:flex;flex-wrap:wrap;gap:8px}
-    .chip{
-      border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:.9rem;background:#fff
+    /* ---- Misc ---- */
+    .soft-divider{
+      height:1px; background:var(--line); margin:14px 0; /* 모바일에서 숨김 */
     }
 
-    /* Slider controls */
-    .nav{
-      position:absolute;top:50%;transform:translateY(-50%);
-      width:46px;height:46px;border-radius:50%;
-      background:#fff;border:1px solid var(--line);box-shadow:0 6px 22px rgba(0,0,0,.08);
-      display:grid;place-items:center;cursor:pointer;user-select:none
-    }
-    .nav svg{width:20px;height:20px}
-    .nav.prev{left:14px}
-    .nav.next{right:14px}
-    .nav:focus-visible{outline:2px solid #000}
-    .indicator{
-      position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
-      font-size:.9rem;color:var(--subtle);background:rgba(255,255,255,.85);
-      border:1px solid var(--line);border-radius:999px;padding:4px 10px
-    }
+    /* ---- Footer ---- */
+    .footer{color:var(--subtle); font-size:.9rem; padding:18px 0 40px}
 
-    /* Mobile tweaks */
-    @media (max-width: 720px){
-      .header-inner{padding:8px 14px}
-      .menu a{font-size:.84rem}
-      .card{padding:18px}
-      .lead{text-align:left}
-      .twocol{grid-template-columns:1fr}
-      .kv{grid-template-columns:100px 1fr}
+    /* ========== Mobile-only overrides (≤ 720px) ========== */
+    @media (max-width: 720px) {
+      /* 컨테이너 단계 여백(페이지 좌우 숨 쉴 공간) */
+      .wrap{ padding-left:20px; padding-right:20px; }
+      .tag-wrap{ padding-left:20px; padding-right:20px; }
+      .header-inner{ padding:8px 16px; }  /* 헤더도 살짝 컴팩트 */
+      .menu a{ font-size:.84rem; }
+
+      /* 타이틀 크기/간격 */
+      .page-title{ font-size:34px; margin:12px 0 6px; }
+
+      /* 히어로 주변 간소화 */
+      .hero img{ border-width:0; }
+
+      /* 태그라인 간격 */
+      .tagline em{ font-size:.98rem; }
+      .tagline .sep{ height:18px; margin:10px 0; }
+
+      /* CTA 버튼 조금 작고 밝게 */
+      .cta-row .btn{
+        padding:7px 10px;
+        font-size:.86rem;
+        background:#262626; /* 기존 #222보다 살짝 밝음 */
+      }
+
+      /* 섹션 구분선: 타이틀 정렬선과 맞춤 (edge=12px 기준) */
+      .rule.edge{ width:calc(100% - 24px); }
+
+      /* ===== 단일 컬럼 흐름 + 좌우 여백 추가 ===== */
+      .section{ padding-left:8px; padding-right:8px; }
+
+      /* 2단 → 1단: 모든 섹션 단일 흐름, 세로선 숨김 */
+      .twocol, .twocol.rev, .split{
+        grid-template-columns:1fr !important;
+        padding-left:4px; padding-right:4px;
+      }
+      .vrule{ display:none; }
+
+      /* 모든 섹션: 제목 밑에 짧은 밑줄 표시 후 내용 */
+      .label{
+        margin-bottom:8px; padding-bottom:6px; position:relative; display:block;
+      }
+      .label::after{
+        content:""; position:absolute; left:0; bottom:0;
+        width:44px; height:1px; background:rgba(17,17,17,.35);
+      }
+
+      /* 모바일 전용: System 내부의 중간 구분선 숨김 */
+      .soft-divider{ display:none; }
+
+      /* Roadmap: 모바일에서는 제목(label)을 내용 위(먼저)로 */
+      .twocol.rev .label{ order:-1; }
+
+      /* Contact 표(좌 라벨/우 값) 정렬 간격 축소 */
+      .kv{ grid-template-columns: 90px 1fr; gap:6px 10px; }
     }
   </style>
 </head>
 <body>
 
-<header class="header">
+<header class="header" aria-label="Site header">
   <div class="header-inner">
     <div class="brand">DLUCA</div>
-    <nav class="menu">
+    <nav class="menu" aria-label="Top links">
       <a href="https://junheean.github.io/junhee/">About Me</a>
       <a href="https://dluca.myportfolio.com" target="_blank" rel="noopener">Portfolio</a>
       <a href="https://www.instagram.com/d.luca0/" target="_blank" rel="noopener">Instagram</a>
-      <a href="executive-summary.pdf" target="_blank" rel="noopener">Exec&nbsp;Summary (PDF)</a>
+      <a href="#contact">Contact</a>
     </nav>
   </div>
 </header>
 
-<main class="viewport" aria-live="polite">
-  <div class="track" id="track">
+<!-- Title (히어로 바로 위, 좌측으로 더 밀기) -->
+<div class="edge-row">
+  <h1 class="page-title">Project LUA</h1>
+</div>
 
-    <!-- Slide 1: Overview + direct links -->
-    <section class="slide" id="s1" aria-label="Overview & Links">
-      <div class="card">
-        <h1 class="title">Project LUA</h1>
-        <figure class="hero"><img src="hero.jpg" alt="Project LUA hero image"></figure>
-        <div class="tag">
-          <em>Real Presence, Real Conversation</em>
-          <span class="sep" aria-hidden="true"></span>
-          <em>From answers to encounters</em>
-        </div>
-        <p class="lead">
-          <b>On-Screen Dialogue NPC Toolkit</b> (보이는 대화 NPC 툴킷).  
-          UE5/MetaHuman 기반으로 <b>대화·자막·음성·립싱크·감정</b>을 한 프레임 안에서 맞물리게 만들어
-          ‘답변’이 아니라 ‘만남’을 구현합니다.
-        </p>
-        <div class="ctas" role="group" aria-label="Direct links">
-          <a class="btn" href="https://youtu.be/FwiWDV9LYas" target="_blank" rel="noopener">Prototype Demo</a>
-          <a class="btn" href="https://youtu.be/AUik19Bm5PI" target="_blank" rel="noopener">Vision Video</a>
-          <a class="btn" href="https://youtu.be/XkNIi9d-ayc" target="_blank" rel="noopener">EdTech Showcase</a>
-          <a class="btn" href="executive-summary.pdf" target="_blank" rel="noopener">Executive Summary (PDF)</a>
-        </div>
-      </div>
-    </section>
+<!-- Hero (더 크게: 이미지 원본비 유지, 전체폭) -->
+<figure class="hero">
+  <img src="hero.jpg" alt="Project LUA banner">
+</figure>
 
-    <!-- Slide 2: Problem → Opportunity -->
-    <section class="slide" id="s2" aria-label="Problem and Opportunity">
-      <div class="card">
-        <h2 class="h">Problem → Opportunity</h2>
-        <div class="pair">
-          <div>
-            <p><b>Presence Gap (존재 격차)</b> — 텍스트/음성만으로는 신뢰·정서·몰입 축적이 어렵습니다.</p>
-            <p><b>Uncanny Fatigue (불쾌부조화 피로)</b> — 표정·타이밍이 어긋나면 피로도가 급증합니다.</p>
-            <p><b>Brand Incoherence (브랜드 일관성 붕괴)</b> — 장면별 톤/금칙/지식 경계 유지가 어렵습니다.</p>
-            <p><b>Operational Friction (운영 마찰)</b> — 응답 속도·백채널·표현 미세조정에 높은 비용이 듭니다.</p>
-          </div>
-          <div class="hr"></div>
-          <div>
-            <p><b>Game fit</b> — 튜토리얼/가이드/도슨트/라이브 이벤트 장면에서 <b>완료율·체류시간·설득력</b> 개선이 목표입니다.</p>
-            <div class="tag-kv">
-              <span class="chip">Tutorial Completion ↑</span>
-              <span class="chip">Quest Acceptance ↑</span>
-              <span class="chip">Session Length ↑</span>
-              <span class="chip">Player Trust ↑</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 3: Solution (game-ish wording) -->
-    <section class="slide" id="s3" aria-label="Solution">
-      <div class="card">
-        <h2 class="h">Solution — On-Screen Dialogue NPC Toolkit</h2>
-        <p class="lead" style="text-align:left">
-          LUA는 팀의 아트/연출을 <b>Dialogue Model(대화 모델)</b>, <b>TTS(음성 합성)</b>, <b>Lip-sync/Emotion(립싱크/감정)</b>과
-          <b>룰 기반</b>으로 묶어주는 <b>런타임 툴킷</b>입니다. 스튜디오는 장면/튜토리얼에 맞춰
-          <b>NPC Persona Preset(페르소나 프리셋)</b>과 <b>Quest/Scene Script(퀘스트/씬 스크립트)</b>만 교체하면 됩니다.
-        </p>
-        <ul class="bul">
-          <li><b>Visible Conversation(보이는 대화)</b>: 시선·표정·백채널·타이밍까지 화면에서 보이게.</li>
-          <li><b>Persona Preset(페르소나 프리셋)</b>: 톤/금칙/지식 경계 프로필을 데이터 에셋으로 관리.</li>
-          <li><b>Scene Script(씬 스크립트)</b>: 튜토리얼/도슨트용 대화 규칙셋, 페이싱 버짓 포함.</li>
-          <li><b>Ops-Ready(운영 대비)</b>: 폴백/로그/리플레이/프리셋 스위치로 라이브 대응.</li>
-        </ul>
-        <div class="ctas">
-          <a class="btn" href="#s4">Go to Runtime Director</a>
-          <a class="btn" href="executive-summary.pdf" target="_blank" rel="noopener">Executive Summary (PDF)</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 4: Runtime Director (System Architecture) -->
-    <section class="slide" id="s4" aria-label="Runtime Director">
-      <div class="card">
-        <h2 class="h">Runtime Director (런타임 디렉터)</h2>
-        <div class="twocol">
-          <div>
-            <h3 class="h" style="font-size:1.02rem">Runtime Interaction Flow</h3>
-            <p>Input → <b>Dialogue Model(stream)</b> → TTS → <b>Viseme</b> 계산 → Lip-sync + Emotion/Micro-Idle → Subtitle/Audio Sync</p>
-            <div class="hr soft-divider"></div>
-            <h3 class="h" style="font-size:1.02rem">Dialogue Director Rules (대화 디렉터 규칙)</h3>
-            <p>
-              발화 끊김을 줄이기 위해 합성 시작은 두 조건으로 제한합니다:
-              <b>(a)</b> 최종 문장 확정(<i>OnFinal</i>) 수신, <b>(b)</b> 짧은 시간/길이 기준으로 청크가 임계치 이상 누적(짧은 청크 결합).
-            </p>
-          </div>
-          <div>
-            <ul class="bul">
-              <li><b>Viseme smoothing</b>: attack/release, low-pass로 입모양 튐 억제</li>
-              <li><b>Emotion easing</b>: 표정 전이 이징으로 프레임 감성 유지</li>
-              <li><b>Gaze IK(시선 동기화)</b>: 카메라 랜드마크(u,v) → Eye/Head 본 매핑(+스무딩)</li>
-              <li><b>UI State</b>: Listening/Thinking/Speaking, 백채널 패턴 라이브러리</li>
-              <li><b>Safety Guard</b>: 금칙/필터, 폴백/로그/리플레이</li>
-            </ul>
-            <div class="ctas">
-              <a class="btn" href="#s5">Terms & Presets</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 5: Terms (game wording, KR/EN) + Presets -->
-    <section class="slide" id="s5" aria-label="Terms and Presets">
-      <div class="card">
-        <h2 class="h">Game Terms (한/영 병기) & Presets</h2>
-        <div class="twocol">
-          <div>
-            <ul class="bul">
-              <li><b>On-Screen Dialogue (보이는 대화)</b></li>
-              <li><b>Runtime Director (런타임 디렉터)</b> — 대화/자막/발화의 시점·전이 규칙</li>
-              <li><b>NPC Persona Preset (NPC 페르소나 프리셋)</b> — 톤/금칙/지식 경계</li>
-              <li><b>Quest/Scene Script (퀘스트/씬 스크립트)</b> — 장면별 규칙셋</li>
-              <li><b>Timing Budget (타이밍 버짓)</b> — 자막/발화/백채널 타이밍 예산</li>
-              <li><b>Gaze IK (시선 동기화)</b></li>
-              <li><b>Safety Guard (콘텐츠 필터/폴백)</b></li>
-              <li><b>Presence Gap / Uncanny Fatigue</b></li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="h" style="font-size:1.02rem">Preset 구조(예시)</h3>
-            <ul class="bul">
-              <li><b>persona.json</b> — tone, forbidden, knowledge boundary</li>
-              <li><b>scene.json</b> — tutorial/guide rules, timing budget</li>
-              <li><b>emotion.json</b> — curve constants, transition rules</li>
-            </ul>
-            <p style="color:var(--subtle)">* UE DataAsset 형태로도 매핑 가능 (BP/AnimBP 연동)</p>
-            <div class="ctas">
-              <a class="btn" href="#s6">Go to Roadmap</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 6: Roadmap (title above content) -->
-    <section class="slide" id="s6" aria-label="Roadmap">
-      <div class="card">
-        <h2 class="h">Roadmap</h2>
-        <div class="twocol">
-          <div>
-            <h3 class="h" style="font-size:1.02rem">11월 — 시스템 품질 정비</h3>
-            <ul class="bul">
-              <li>STT 입력(청취 상태·침묵 타임아웃·발화 전환 규칙)</li>
-              <li>Gaze Sync 1차(u,v → Eye/Head 본 매핑 + 스무딩)</li>
-              <li>UI 상태 체계화: Listening / Thinking / Speaking, 백채널 라이브러리</li>
-              <li>LLM 교체 가능 구조(어댑터/프롬프트 프로필 분리)</li>
-              <li>반응 속도 개선(청크 결합, 자막/발화 페이싱 버짓)</li>
-              <li>Lip-sync 튐 완화(attack/release·LPF·이징)</li>
-              <li>Emotion 커브 시간상수·전이 규칙 정립</li>
-              <li>전체 성능 개선</li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="h" style="font-size:1.02rem">12월 — 패키징 & 평가</h3>
-            <ul class="bul">
-              <li>패키징/런처·프리셋 번들(데모/전시용, 로깅 옵션)</li>
-              <li>소규모 사용자 평가(파일럿): Presence/Uncanny/이해도 지표</li>
-              <li>공모전 제출: Creative Award 등 자료 정리</li>
-            </ul>
-            <h3 class="h" style="font-size:1.02rem;margin-top:12px">1월 — PoC & 현장 운용 설계</h3>
-            <ul class="bul">
-              <li>PoC 기획/세팅 가이드(하드웨어, 카메라/마이크, 네트워크, 조도)</li>
-              <li>운영 시나리오(폴백, 정책/시나리오 롤백, 로그/리플레이)</li>
-            </ul>
-            <div class="ctas">
-              <a class="btn" href="#s7">Contact & All Links</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 7: Contact + all direct links again -->
-    <section class="slide" id="s7" aria-label="Contact and Links">
-      <div class="card">
-        <h2 class="h">Contact</h2>
-        <div class="twocol">
-          <div>
-            <p style="margin:0 0 10px">
-              <b>안준희</b><br>
-              <span class="small">An Junhee</span><br>
-              <span class="small">SNU Visual Communication Design, 2024.02</span>
-            </p>
-            <div class="kv">
-              <b>About me</b><span><a href="https://junheean.github.io/junhee/">junheean.github.io/junhee/</a></span>
-              <b>Email</b><span><a href="mailto:dluca.ailab@gmail.com">dluca.ailab@gmail.com</a></span>
-              <b>Phone</b><span>010&nbsp;5168&nbsp;3537</span>
-              <b>Insta</b><span><a href="https://www.instagram.com/d.luca0/" target="_blank" rel="noopener">@d.luca0</a></span>
-              <b>Portfolio</b><span><a href="https://dluca.myportfolio.com" target="_blank" rel="noopener">dluca.myportfolio.com</a></span>
-            </div>
-          </div>
-          <div>
-            <h3 class="h" style="font-size:1.02rem">Links</h3>
-            <div class="ctas" style="justify-content:flex-start">
-              <a class="btn" href="https://youtu.be/FwiWDV9LYas" target="_blank" rel="noopener">Prototype Demo</a>
-              <a class="btn" href="https://youtu.be/AUik19Bm5PI" target="_blank" rel="noopener">Vision Video</a>
-              <a class="btn" href="https://youtu.be/XkNIi9d-ayc" target="_blank" rel="noopener">EdTech Showcase</a>
-              <a class="btn" href="executive-summary.pdf" target="_blank" rel="noopener">Executive Summary (PDF)</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
+<!-- Tagline 중앙: 두 줄 + 중간 세로선 + 이탤릭/얇게 -->
+<div class="tag-wrap">
+  <div class="tagline" aria-label="Tagline">
+    <em>Real Presence, Real Conversation</em>
+    <span class="sep" aria-hidden="true"></span>
+    <em>From answers to encounters</em>
   </div>
+</div>
 
-  <!-- Slider controls -->
-  <button class="nav prev" id="prev" aria-label="Previous slide">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
-  <button class="nav next" id="next" aria-label="Next slide">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
-  <div class="indicator" id="indicator" aria-live="polite">1 / 7</div>
-</main>
+<hr class="rule edge">
 
-<footer style="text-align:center;color:var(--subtle);padding:18px 0 28px">© D-LUCA / Project LUA</footer>
+<!-- Overview (중앙 정렬, '이다'체 + CTA 버튼) -->
+<section id="overview" class="wrap section" style="text-align:center">
+  <p class="lead" style="margin:0 auto; max-width:680px">
+    <b>Project LUA</b>는 ‘보이는 대화(Visible Conversation)’를 목표로 하는 실시간 디지털 휴먼 연구/프로토타입이다.
+    로컬 환경의 언어 모델이 대화 의도와 맥락을 생성하면, 시스템은 이를 <b>자막·음성·입모양·감정·미세동작</b>으로 정밀하게 동기화해
+    사람과 마주 앉아 대화하는 듯한 <b>존재감·설득력</b>을 만든다. 목표는 ‘빠른 답변’이 아니라, 실제 상호작용에서 체감되는 <b>관계감</b>을 끌어올리는 것이다.
+  </p>
 
-<script>
-(function(){
-  const track = document.getElementById('track');
-  const slides = Array.from(track.children);
-  const prev = document.getElementById('prev');
-  const next = document.getElementById('next');
-  const ind  = document.getElementById('indicator');
-  let idx = 0;
-  function go(i, jump=false){
-    idx = Math.max(0, Math.min(i, slides.length-1));
-    const x = -idx * window.innerWidth;
-    track.style.transitionDuration = jump ? '0ms' : '450ms';
-    track.style.transform = `translate3d(${x}px,0,0)`;
-    ind.textContent = (idx+1)+' / '+slides.length;
-    // aria-hidden 업데이트
-    slides.forEach((s,n)=>s.setAttribute('aria-hidden', n===idx ? 'false':'true'));
-    // 해시 업데이트(깊은 링크)
-    const id = slides[idx].id || ('s'+(idx+1));
-    history.replaceState(null,'','#'+id);
-  }
-  function nextSlide(){ go(idx+1); }
-  function prevSlide(){ go(idx-1); }
-  prev.addEventListener('click', prevSlide);
-  next.addEventListener('click', nextSlide);
-  window.addEventListener('resize', ()=>go(idx,true));
-  // 키보드
-  window.addEventListener('keydown', e=>{
-    if(e.key==='ArrowRight') nextSlide();
-    else if(e.key==='ArrowLeft') prevSlide();
-  });
-  // 스와이프(터치)
-  let sx=0, dx=0, touching=false;
-  track.addEventListener('touchstart', e=>{ touching=true; sx=e.touches[0].clientX; dx=0; }, {passive:true});
-  track.addEventListener('touchmove', e=>{ if(!touching) return; dx=e.touches[0].clientX - sx; }, {passive:true});
-  track.addEventListener('touchend', ()=>{
-    if(!touching) return;
-    touching=false;
-    if(Math.abs(dx)>50){ (dx<0?nextSlide:prevSlide)(); }
-  });
-  // 해시로 특정 슬라이드 진입
-  const hash = location.hash.replace('#','');
-  const startIdx = hash ? slides.findIndex(s=>s.id===hash) : 0;
-  go(startIdx<0?0:startIdx, true);
-})();
-</script>
+  <div class="cta-row">
+    <a class="btn" href="https://youtu.be/FwiWDV9LYas" target="_blank" rel="noopener">Prototype&nbsp;Demo</a>
+    <a class="btn" href="https://youtu.be/AUik19Bm5PI" target="_blank" rel="noopener">Vision&nbsp;Video</a>
+    <a class="btn" href="https://youtu.be/XkNIi9d-ayc" target="_blank" rel="noopener">EdTech&nbsp;Showcase</a>
+    <a class="btn" href="executive-summary.pdf" target="_blank" rel="noopener">Executive&nbsp;Summary&nbsp;(PDF)</a>
+  </div>
+</section>
+
+<hr class="rule edge">
+
+<!-- Definition (좌: 제목 넓게 / 우: 내용 좁게, 상단선 맞춤) -->
+<section id="definition" class="wrap section" style="--labelw:260px">
+  <div class="twocol">
+    <div class="label">Definition</div>
+    <div class="vrule" aria-hidden="true"></div>
+    <div class="body narrow tight">
+      <p>
+        Project <b>LUA</b>는 <b>‘존재감 자체가 인터페이스’</b>라는 자신의 명제를 실시간 상호작용으로 구현한 디지털 휴먼 실험이자 작품이다.
+        텍스트 상자 속 대답을 넘어, 시선·표정·타이밍·말투와 같은 가시적 대화(Visible Conversation)를 통해 사람과 만나는 경험을 설계한다.
+        브랜드-정합적 톤과 정책을 유지하면서도 리얼리즘 아트(3D·조명·카메라·UI)와 엔지니어링(LLM·TTS·립싱크·자막 스트림)이
+        한 몸처럼 작동하도록 만든다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="rule edge">
+
+<!-- Problem | Solution (좌/우, 가운데 세로선 + 각 타이틀 밑 짧은 라인) -->
+<section id="ps" class="wrap section">
+  <div class="split">
+    <div class="body">
+      <div class="subhead">Problem</div>
+      <p>
+        오늘의 많은 AI는 답을 내놓지만 ‘만나지’는 못한다. 텍스트와 음성만으로는 신뢰·정서·몰입이 축적되기 어렵다(존재 격차, Presence Gap).
+        어긋난 표정과 타이밍은 피로와 거부감을 키운다(불쾌부조화 피로, Uncanny Fatigue). 즉석으로 구동되는 LLM은 브랜드의 톤·금칙·지식 경계를
+        일관되게 유지하기 힘들다(브랜드 일관성 붕괴, Brand Incoherence), 그리고 현장 맥락에 맞춘 응답 속도·백채널·표현의 미세 조정은 여전히
+        높은 운영 비용을 요구한다(운용 마찰, Operational Friction). 그 결과 AI와의 상호작용은 ‘보이지 않는 대화’에 머물고, 설득과 관계 형성으로
+        이어지지 못한다. — <b>지금 필요한 것은 보이는 대화와 대면 가능한 존재감이다.</b>
+      </p>
+    </div>
+    <div class="vrule" aria-hidden="true"></div>
+    <div class="body">
+      <div class="subhead">Solution</div>
+      <p>
+        LUA는 브랜드-맞춤형 리얼리즘 디지털 휴먼으로, 텍스트 중심 상호작용의 한계를 넘어 보이는 대화를 제공한다.
+        일관된 E2E 런타임 체계(LLM → TTS → Lip-sync/Emotion → Subtitles/Chat UI) 위에 페르소나·시나리오 정책을 분리해 톤·금칙·지식 경계를 유지하고,
+        리얼리즘 아트(모델·조명·카메라·UI)와 결합해 말과 표정·타이밍이 함께 움직이도록 설계한다. 이 구성은 Presence Gap을 줄이고, Uncanny Fatigue를 낮추며,
+        Brand Incoherence를 제어한다. 또한 모듈형 어댑터와 프로필 기반 운영으로 Operational Friction을 완화해, 키오스크·도슨트·튜터 등 다양한 장면으로
+        확장 가능한 기반을 마련한다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="rule edge">
+
+<!-- System Architecture (상위 타이틀, 하위: Runtime / Orchestration) -->
+<section id="system" class="wrap section">
+  <div class="twocol">
+    <div class="label">System Architecture</div>
+    <div class="vrule" aria-hidden="true"></div>
+    <div class="body">
+      <h3 style="margin:0 0 6px; font-weight:700">Runtime Interaction Flow</h3>
+      <p style="margin-top:0">Input → LLM(stream) → TTS → Viseme 계산 → Lip-sync + Emotion/Micro-Idle → Subtitle/Audio Sync</p>
+      <div class="soft-divider"></div> <!-- 모바일에서 숨김 -->
+      <h3 style="margin:0 0 6px; font-weight:700">Orchestration</h3>
+      <p style="margin-top:0">
+        LUA의 오케스트레이션은 수치 튜닝 이전에 흐름을 표준화하는 데 초점을 둔다. 스트리밍 수신 시 자막은 실시간으로 업데이트하고,
+        음성 합성 시작은 두 조건으로 제한한다: (a) 최종 문장 확정(<i>OnFinal</i>) 수신 시점, 또는 (b) 짧은 시간/길이 기준으로 청크가
+        일정량 모였을 때(‘짧은 청크 결합’ 버퍼 임계치 충족). 이렇게 해서 잘게 끊기는 발화를 방지한다.
+      </p>
+      <p>
+        합성된 오디오는 OVRLipSync → AnimBP(ARKit 커브)로 전달되어 입모양–음성 동기를 맞추고, viseme 스무딩(attack/release, low-pass)과
+        Emotion 이징으로 표정/입모양의 미세 튐을 억제한다. Blink 정상화·Micro-Idle·UI Reveal은 대기→청취→발화 전환 구간을 메워
+        상호작용의 연속성을 확보한다.
+      </p>
+      <p>
+        시작 상태는 WBP_Subtitle → WBP_Chat 순 레이어링과 커서/클릭/오버 활성화로 즉시 조작 가능하게 열어 두며,
+        텍스트 파이프라인에서는 어댑터 단계 정제로 불필요한 문자열이 음성으로 읽히지 않도록 한다. (STT·Gaze Sync는 동일한 프레임에 편입될 로드맵 항목으로 유지.)
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="rule edge">
+
+<!-- Roadmap (데스크톱: 우 제목 / 좌 내용, 모바일: 제목이 내용 위로) -->
+<section id="roadmap" class="wrap section">
+  <div class="twocol rev" style="grid-template-columns: 1fr 1px var(--labelw);">
+    <div class="body">
+      <h3 class="small" style="margin:0 0 6px">11월 — 시스템 품질 정비</h3>
+      <ul>
+        <li>STT 입력 도입(청취 상태·침묵 타임아웃·발화 전환 규칙)</li>
+        <li>Gaze Sync 1차(카메라 랜드마크 u,v → 아이/헤드 본 매핑 + 기본 스무딩)</li>
+        <li>UI 상태 체계화: Listening / Thinking / Speaking, 백채널 패턴 라이브러리화</li>
+        <li>전체 성능 개선</li>
+        <li>LLM 교체 가능 구조(어댑터/프롬프트 프로필 분리)</li>
+        <li>반응 속도 개선(청크 결합, 자막/발화 페이싱 버짓 도입)</li>
+        <li>Lip-sync 튐 완화(viseme attack/release·LPF·이징)</li>
+        <li>표정 개선(Emotion 커브 시간상수·전이 규칙 정립)</li>
+      </ul>
+      <h3 class="small" style="margin:14px 0 6px">12월 — 패키징 & 평가</h3>
+      <ul>
+        <li>패키징/런처·프리셋 번들(데모/전시용 프리셋, 로깅 옵션)</li>
+        <li>사용자 소규모 평가(파일럿): 존재감·불쾌부조화·이해도 지표 설계 및 1차 수집</li>
+        <li>공모전 제출: Creative Award 등 출품 자료 정리</li>
+      </ul>
+      <h3 class="small" style="margin:14px 0 6px">1월 — PoC & 현장 운용 설계</h3>
+      <ul>
+        <li>PoC 기획/세팅 가이드(하드웨어, 카메라/마이크, 네트워크, 공간 조도)</li>
+        <li>운영 시나리오(오프라인 폴백, 정책/시나리오 롤백, 로그/리플레이)</li>
+      </ul>
+    </div>
+    <div class="vrule" aria-hidden="true"></div>
+    <div class="label">Roadmap</div>
+  </div>
+</section>
+
+<hr class="rule edge">
+
+<!-- Contact -->
+<section id="contact" class="wrap section">
+  <div class="twocol">
+    <div class="label">Contact</div>
+    <div class="vrule" aria-hidden="true"></div>
+    <div class="body">
+      <p class="lead" style="margin:0 0 10px">
+        <b>안준희</b><br>
+        <span class="small">An Junhee</span><br>
+        <span class="small">SNU Visual Communication Design, 2024.02</span>
+      </p>
+      <div class="kv">
+        <b>About me</b><span><a href="https://junheean.github.io/junhee/">junheean.github.io/junhee/</a></span>
+        <b>Email</b><span><a href="mailto:dluca.ailab@gmail.com">dluca.ailab@gmail.com</a></span>
+        <b>Phone</b><span>010&nbsp;5168&nbsp;3537</span>
+        <b>Insta</b><span><a href="https://www.instagram.com/d.luca0/" target="_blank" rel="noopener">@d.luca0</a></span>
+        <b>Portfolio</b><span><a href="https://dluca.myportfolio.com" target="_blank" rel="noopener">dluca.myportfolio.com</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule edge">
+<footer class="wrap footer">© D-LUCA / Project LUA</footer>
 
 </body>
 </html>
+
