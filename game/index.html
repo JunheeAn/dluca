@@ -38,11 +38,11 @@
     overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#fff;
     transition:height .35s ease; /* 슬라이드별 높이 변화 부드럽게 */
   }
-  .track{display:flex;transition:transform .45s ease}
+  .track{display:flex;transition:transform .45s ease;align-items:stretch}
   .slide{
     position:relative;min-width:100%;
     padding:72px 32px 60px; /* 상단 라벨 공간 확보(고정), 하단은 내용에 따라 */
-    display:grid;gap:18px;align-items:start;
+    display:grid;gap:18px;align-items:start;overflow:hidden; /* 이미지 넘침 방지 */
   }
   .s-one{grid-template-columns:1fr}
   .s-two{grid-template-columns:1.1fr .9fr;gap:28px}
@@ -58,13 +58,20 @@
   .body{color:var(--muted)}
   .rule{border:0;border-top:1px solid var(--line);margin:8px 0 12px}
 
-  /* Media & Caption */
-  .media{width:100%;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fcfdff}
-  .media img{width:100%;height:auto;display:block}
+  /* Media & Caption (이미지 중앙정렬) */
+  .media{
+    width:100%;max-width:100%;
+    border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fcfdff;
+    margin-left:auto;margin-right:auto; /* 가로 중앙 정렬 */
+  }
+  .media img{display:block;max-width:100%;height:auto;margin:0 auto}
   .cap{font-size:.85rem;color:var(--subtle);padding:6px 10px;border-top:1px solid var(--line);background:#fff}
 
   /* Diagram (폰트 키움) */
-  .diagram{border:1px dashed var(--line);border-radius:10px;padding:12px;background:#fcfdff}
+  .diagram{
+    border:1px dashed var(--line);border-radius:10px;padding:12px;background:#fcfdff;
+    margin-left:auto;margin-right:auto; /* 다이어그램도 중앙 */
+  }
   .diagram svg{width:100%;height:auto;display:block}
 
   /* Arrows (옅게) */
@@ -98,9 +105,11 @@
   @media (max-width:960px){
     .s-two{grid-template-columns:1fr}
   }
-  @media (max-width:640px){
+  @media (max-width:720px){
     .slide{padding:72px 18px 56px}
     .arrow{width:40px;height:40px}
+    /* Roadmap: 모바일에서 세로 스택 */
+    .road-grid{grid-template-columns:1fr !important}
   }
 </style>
 </head>
@@ -110,8 +119,8 @@
   <div class="header-inner">
     <a class="brand" href="../" title="Back to Main">DLUCA</a>
     <nav class="top-menu">
-      <a href="executive-summary.pdf" target="_blank" rel="noopener">Executive Summary (PDF)</a>
       <a href="https://junheean.github.io/junhee/" target="_blank" rel="noopener">About me</a>
+      <a href="executive-summary.pdf" target="_blank" rel="noopener">Executive Summary (PDF)</a>
     </nav>
   </div>
 </header>
@@ -125,7 +134,7 @@
         <div class="sl-label">High-Concept</div>
         <div>
           <h1 class="h1">Project LUA — Visible-Conversation NPC Runtime<br>
-            <span style="font-weight:600;font-size:16px;color:#333">가시적 대화 NPC 런타임</span></h1>
+            <span style="font-weight:600;font-size:16px;color:#333">실시간 보이는 대화 NPC</span></h1>
           <figure class="media" style="margin-top:12px">
             <img src="../hero.jpg" alt="Project LUA hero">
           </figure>
@@ -143,7 +152,7 @@
             <li><b>2023</b> — AI NPC <b>창발적 서사</b> 연구(논문) <a href="paper.pdf" target="_blank" rel="noopener">[paper]</a></li>
             <li><b>2023</b> — <a href="DreamCanvas.pdf" target="_blank" rel="noopener"><b>DreamCanvas</b> (DLUCA 전신)</a></li>
             <li><b>2024–25</b> — 기술 장벽 돌파 → <b>LUA 프로토타입</b> 완성</li>
-            <li><b>2025</b> — EdTech 전시(실시간 <b>AI Tutor LUA</b>)</li>
+            <li><b>2025</b> — EdTech 전시 (<a href="https://youtu.be/XkNIi9d-ayc" target="_blank" rel="noopener"><b>EdTech&nbsp;Showcase</b></a>)</li>
           </ul>
           <p class="body" style="margin-top:6px">1인으로 <b>연구·기획·구현·전시</b>까지 완주했고, <b>현장 반응</b>까지 확인했습니다.</p>
         </div>
@@ -164,12 +173,9 @@
             <li><b>Uncanny Fatigue</b> — 어긋난 <b>표정·타이밍</b>이 피로/거부감 유발.</li>
             <li><b>Lore Drift</b> — 즉석 응답이 <b>세계관·설정</b> 일관성에서 이탈.</li>
           </ul>
-          <p><b>→ 해결:</b> <em>Visible Conversation</em> + 일관된 <b>오케스트레이션</b>.</p>
+          <p><b>→ 해결:</b> <b>Visible Conversation(System Architecture)</b> + 일관된 <b>오케스트레이션</b>.</p>
         </div>
-        <figure class="media">
-          <img src="s3-problem.jpg" alt="(optional) Problem illustration">
-          <figcaption class="cap">Optional illustration</figcaption>
-        </figure>
+        <!-- 이미지 제거 (요청) -->
       </section>
 
       <!-- s4 Vision / Core Experience -->
@@ -186,16 +192,22 @@
         </figure>
       </section>
 
-      <!-- s5 Core Loop (텍스트 먼저, 다이어그램 아래) -->
-      <section class="slide s-two" data-slide="5" aria-label="Core Loop">
-        <div class="sl-label">Core Loop</div>
+      <!-- s5 Core Loop + Runtime Director (병합, 다이어그램 2개) -->
+      <section class="slide s-two" data-slide="5" aria-label="Core Loop & Director">
+        <div class="sl-label">Core Loop & Director</div>
         <div>
           <h2 class="h2">Listen → Think → Speak → React → Idle<br>
             <span style="font-weight:600;font-size:16px;color:#333">듣기 → 생각 → 말하기 → 반응 → 대기</span></h2>
           <hr class="rule">
-          <p class="body">침묵 구간에는 <b>Back-channel</b>을 활용해 불쾌부조화를 최소화합니다.</p>
+          <ul class="body">
+            <li>상태 전이: <b>Idle ↔ Listening ↔ Thinking ↔ Speaking ↔ Reacting</b></li>
+            <li><b>Back-channel</b>을 활용해 침묵 구간의 단절감을 최소화</li>
+            <li>STT 상태/타임아웃, <b>Latency Budget</b>으로 페이싱 관리</li>
+          </ul>
         </div>
-        <div class="diagram" aria-label="Core loop diagram">
+
+        <!-- Diagram 1: Core Loop -->
+        <figure class="diagram" aria-label="Core loop diagram">
           <svg viewBox="0 0 820 340">
             <defs>
               <style>
@@ -222,21 +234,11 @@
             <path class="a" d="M 660 210 C 560 300, 230 300, 160 210" fill="none" stroke="#333" stroke-width="1.6"/>
             <text class="s" x="410" y="320" text-anchor="middle">Back-channel barks로 침묵 구간 이질감 완화</text>
           </svg>
-        </div>
-      </section>
+          <figcaption class="cap">Core Loop</figcaption>
+        </figure>
 
-      <!-- s6 Runtime Director (텍스트 먼저, 다이어그램 아래) -->
-      <section class="slide s-two" data-slide="6" aria-label="Runtime Director">
-        <div class="sl-label">Runtime Director</div>
-        <div>
-          <h2 class="h2">State Machine & Latency Budget<br><span style="font-weight:600;font-size:16px;color:#333">상태기계 & 지연 버짓</span></h2>
-          <hr class="rule">
-          <ul class="body">
-            <li>States: <b>Idle ↔ Listening ↔ Thinking ↔ Speaking ↔ Reacting</b></li>
-            <li><b>Back-channel</b>로 침묵 구간 연결성 확보</li>
-          </ul>
-        </div>
-        <div class="diagram" aria-label="STT & Gaze Sync pipeline">
+        <!-- Diagram 2: STT & Gaze Sync -->
+        <figure class="diagram" aria-label="STT & Gaze Sync pipeline">
           <svg viewBox="0 0 860 380">
             <defs>
               <style>
@@ -269,11 +271,12 @@
             <line class="a" x1="630" y1="158" x2="650" y2="158" stroke="#333" stroke-width="1.6"/>
             <line class="a" x1="630" y1="183" x2="650" y2="251" stroke="#333" stroke-width="1.6"/>
           </svg>
-        </div>
+          <figcaption class="cap">STT &amp; Gaze Sync Pipeline</figcaption>
+        </figure>
       </section>
 
-      <!-- s7 Orchestration (텍스트 먼저, 다이어그램 아래) -->
-      <section class="slide s-two" data-slide="7" aria-label="Orchestration">
+      <!-- s6 Orchestration (시간축) -->
+      <section class="slide s-two" data-slide="6" aria-label="Orchestration">
         <div class="sl-label">Orchestration</div>
         <div>
           <h2 class="h2">OnFinal / Coalesce Gate, Viseme & Emotion Smoothing<br>
@@ -281,7 +284,7 @@
           <hr class="rule">
           <p class="body">버퍼/딜레이 값은 <b>프리셋</b>·<b>상황</b>에 따라 조정합니다.</p>
         </div>
-        <div class="diagram" aria-label="Orchestration timeline with time axis">
+        <figure class="diagram" aria-label="Orchestration timeline with time axis">
           <svg viewBox="0 0 860 300">
             <defs>
               <style>
@@ -314,11 +317,11 @@
             <rect class="bar" x="230" y="226" width="240" height="20"/>
             <text class="s" x="480" y="242">Emotion Delay ~0.5s(예)</text>
           </svg>
-        </div>
+        </figure>
       </section>
 
-      <!-- s8 Tech Proof (Main UI) -->
-      <section class="slide s-two" data-slide="8" aria-label="Tech Proof">
+      <!-- s7 Tech Proof (Main UI) -->
+      <section class="slide s-two" data-slide="7" aria-label="Tech Proof">
         <div class="sl-label">Tech Proof</div>
         <div>
           <h2 class="h2">현재 동작 — LLM/TTS/Lip/Emotion/Subtitle<br>
@@ -335,8 +338,8 @@
         </figure>
       </section>
 
-      <!-- s9 Integration & Extensions (문장 추가) -->
-      <section class="slide s-two" data-slide="9" aria-label="Integration">
+      <!-- s8 Integration & Extensions -->
+      <section class="slide s-two" data-slide="8" aria-label="Integration">
         <div class="sl-label">Integration & Extensions</div>
         <div>
           <h2 class="h2">엔진 통합 & 확장<br>
@@ -345,8 +348,8 @@
           <ul class="body">
             <li><b>LLMClientComponent</b>로 <b>NPC 확장</b> 용이 — 다수 NPC에 동일 런타임 적용</li>
             <li><b>AI-NPC ↔ AI-NPC 대화</b> 기반 <b>창발적 서사</b> 확장 가능</li>
-            <li><b>어댑터 & 프롬프트 프로필 분리</b>로 <b>말투·지식·배경</b> 교체가 손쉽고 안전</li>
-            <li><b>UE5 Plugin</b> 구성으로 프로젝트 간 <b>재사용</b>·다른 콘텐츠에 <b>신속 적용</b></li>
+            <li><b>어댑터 &amp; 프롬프트 프로필 분리</b>로 <b>말투·지식·배경</b> 교체가 손쉽고 안전</li>
+            <li><b>UE5 Plugin</b>으로 프로젝트 간 <b>재사용</b>·다른 콘텐츠에 <b>신속 적용</b></li>
           </ul>
         </div>
         <figure class="media">
@@ -355,15 +358,15 @@
         </figure>
       </section>
 
-      <!-- s10 Mini-Project: The Conversation -->
-      <section class="slide s-two" data-slide="10" aria-label="Mini project">
-        <div class="sl-label">Mini-Project</div>
+      <!-- s9 Game: The Conversation -->
+      <section class="slide s-two" data-slide="9" aria-label="Game">
+        <div class="sl-label">Game</div>
         <div>
-          <h2 class="h2">“The Conversation” — 내러티브 실험<br>
+          <h2 class="h2">“The Conversation” — Game<br>
             <span style="font-weight:600;font-size:16px;color:#333">대화만으로 진행·긴장감/몰입 극대화</span></h2>
           <hr class="rule">
           <p class="body">LLM NPC의 장점을 극대화한 짧은 내러티브. 플레이어의 발화와 감정에 반응하며 <b>대화만으로</b> 이야기가 전개됩니다.</p>
-          <p class="body">콘셉트/무드 자료: <a href="the-conversation.pdf" target="_blank" rel="noopener">Concept Brief (PDF)</a>, <a href="tc-mood.jpg" target="_blank" rel="noopener">Mood Board</a></p>
+          <p class="body">참고: <a href="the-conversation.pdf" target="_blank" rel="noopener">기획서 (PDF)</a></p>
         </div>
         <figure class="media">
           <img src="s10-tc.jpg" alt="The Conversation key art">
@@ -371,13 +374,13 @@
         </figure>
       </section>
 
-      <!-- s11 Roadmap (compact & 요약) -->
-      <section class="slide s-one" data-slide="11" aria-label="Roadmap">
+      <!-- s10 Roadmap (모바일 세로 스택) -->
+      <section class="slide s-one" data-slide="10" aria-label="Roadmap">
         <div class="sl-label">Roadmap</div>
         <div>
           <h2 class="h2">Roadmap — 11월 / 12월 / 1월</h2>
           <hr class="rule">
-          <div class="body small" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+          <div class="body small road-grid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
             <div>
               <b>11월 — 시스템 품질</b>
               <ul class="list-compact tiny">
@@ -409,18 +412,33 @@
         </div>
       </section>
 
-      <!-- s12 Contacts -->
-      <section class="slide s-one" data-slide="12" aria-label="Contacts">
+      <!-- s11 Contacts (Executive Summary를 마지막으로 이동, 띄어쓰기 가독성 강화) -->
+      <section class="slide s-one" data-slide="11" aria-label="Contacts">
         <div class="sl-label">Contacts</div>
         <div style="text-align:center">
           <h2 class="h2">안준희 · An Junhee</h2>
-          <p class="body" style="margin:6px 0 10px">SNU Visual Communication Design (2024.02)</p>
-          <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
-            <a class="card" href="../" rel="noopener" style="text-decoration:none"><b>Back to Main</b><span class="body">메인 페이지</span></a>
-            <a class="card" href="https://junheean.github.io/junhee/" target="_blank" rel="noopener" style="text-decoration:none"><b>About me</b><span class="body">junheean.github.io/junhee/</span></a>
-            <a class="card" href="executive-summary.pdf" target="_blank" rel="noopener" style="text-decoration:none"><b>Executive Summary</b><span class="body">PDF</span></a>
-            <a class="card" href="mailto:dluca.ailab@gmail.com" style="text-decoration:none"><b>Email</b><span class="body">dluca.ailab@gmail.com</span></a>
-            <a class="card" href="https://www.instagram.com/d.luca0/" target="_blank" rel="noopener" style="text-decoration:none"><b>Instagram</b><span class="body">@d.luca0</span></a>
+          <p class="body" style="margin:8px 0 14px">SNU Visual Communication Design (2024.02)</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
+            <a class="card" href="../" rel="noopener" style="text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:220px;text-align:left;background:#fff">
+              <b style="display:block;margin-bottom:4px">Back to Main</b>
+              <span class="body">메인 페이지</span>
+            </a>
+            <a class="card" href="https://junheean.github.io/junhee/" target="_blank" rel="noopener" style="text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:220px;text-align:left;background:#fff">
+              <b style="display:block;margin-bottom:4px">About me</b>
+              <span class="body">junheean.github.io/junhee/</span>
+            </a>
+            <a class="card" href="mailto:dluca.ailab@gmail.com" style="text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:220px;text-align:left;background:#fff">
+              <b style="display:block;margin-bottom:4px">Email</b>
+              <span class="body">dluca.ailab@gmail.com</span>
+            </a>
+            <a class="card" href="https://www.instagram.com/d.luca0/" target="_blank" rel="noopener" style="text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:220px;text-align:left;background:#fff">
+              <b style="display:block;margin-bottom:4px">Instagram</b>
+              <span class="body">@d.luca0</span>
+            </a>
+            <a class="card" href="executive-summary.pdf" target="_blank" rel="noopener" style="text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:220px;text-align:left;background:#fff">
+              <b style="display:block;margin-bottom:4px">Executive Summary</b>
+              <span class="body">(PDF)</span>
+            </a>
           </div>
         </div>
       </section>
@@ -438,7 +456,7 @@
     </div>
 
     <!-- Slide counter -->
-    <div class="counter" id="counter" aria-live="polite">1 / 12</div>
+    <div class="counter" id="counter" aria-live="polite">1 / 11</div>
   </div>
 </main>
 
