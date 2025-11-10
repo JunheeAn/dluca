@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Project LUA — D-LUCA</title>
+  <meta name="description" content="Project LUA: On-Screen Dialogue NPC Toolkit for real presence and conversation.">
+  <meta name="theme-color" content="#f7f9fb">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f7f9fb;      /* 옅은 블루 틴트 화이트 */
+      --fg:#111;
+      --muted:#2a2a2a;
+      --subtle:#666;
+      --line:rgba(17,17,17,.16);
+      --edge:16px;
+      --maxw:980px;      /* 슬라이드 내부 컨텐트 폭 */
+      --radius:14px;
+      --btn:#222;        /* CTA 버튼(어두운 회색) */
+      --btnText:#fff;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--fg);
+      font-family:'Inter','Noto Sans KR',system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Malgun Gothic,sans-serif;
+      line-height:1.65}
+    a{color:inherit;text-decoration:none}
+    a:hover{text-decoration:underline}
+    img{max-width:100%;height:auto;display:block}
+
+    /* Header */
+    .header{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter:saturate(1.05) blur(6px);
+      background:rgba(247,249,251,.86);
+      border-bottom:1px solid var(--line);
+    }
+    .header-inner{
+      padding:10px 32px 10px 16px;
+      display:flex;align-items:center;gap:12px
+    }
+    .brand{font-weight:800;font-size:.95rem;letter-spacing:.1px;margin-right:auto}
+    .menu{display:flex;gap:18px;align-items:center}
+    .menu a{font-size:.86rem;color:var(--subtle)}
+    .menu a:hover{color:var(--fg)}
+
+    /* Slider layout */
+    .viewport{position:relative;overflow:hidden}
+    .track{
+      display:flex;will-change:transform;
+      transition:transform .45s cubic-bezier(.22,.61,.36,1);
+      touch-action:pan-y; /* 수직 스크롤 허용, 가로는 JS로 처리 */
+    }
+    .slide{
+      flex:0 0 100vw;        /* 항상 뷰포트 폭 */
+      min-height:calc(100dvh - 60px); /* 헤더 제외 꽉 차게 */
+      display:grid;place-items:center;
+      padding:24px;
+    }
+    .card{
+      width:min(100%, var(--maxw));
+      padding:22px clamp(14px,3vw,28px);
+      background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+      box-shadow:0 10px 40px rgba(0,0,0,.04);
+    }
+    .title{
+      font-weight:200;letter-spacing:-.2px;
+      font-size: clamp(34px, 6vw, 56px); line-height:1.05; margin:0 0 8px;
+    }
+    .hero{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:6px 0 14px}
+    .tag{
+      display:flex;flex-direction:column;align-items:center;gap:12px;margin:10px 0 2px;text-align:center;color:#151515;
+    }
+    .tag em{font-style:italic;font-weight:200}
+    .tag .sep{width:1px;height:22px;background:#151515;opacity:.45}
+
+    .lead{margin:0 auto 12px;max-width:72ch;color:var(--muted);text-align:center}
+
+    .ctas{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:12px}
+    .btn{
+      background:var(--btn);color:var(--btnText);
+      border:1px solid rgba(255,255,255,.85);border-radius:12px;
+      padding:9px 14px;font-size:.92rem;white-space:nowrap
+    }
+    .btn:hover{border-color:#fff;text-decoration:none}
+
+    .h{font-weight:800;margin:0 0 8px}
+    .hr{height:1px;background:var(--line);margin:14px 0}
+    .pair{display:grid;grid-template-columns:1fr;gap:18px}
+    .twocol{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    .bul{padding-left:18px;margin:8px 0}
+    .bul li{margin:4px 0}
+    .kv{display:grid;grid-template-columns:120px 1fr;gap:8px 14px}
+    .kv b{font-weight:700}
+
+    /* Game terms tag */
+    .tag-kv{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{
+      border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:.9rem;background:#fff
+    }
+
+    /* Slider controls */
+    .nav{
+      position:absolute;top:50%;transform:translateY(-50%);
+      width:46px;height:46px;border-radius:50%;
+      background:#fff;border:1px solid var(--line);box-shadow:0 6px 22px rgba(0,0,0,.08);
+      display:grid;place-items:center;cursor:pointer;user-select:none
+    }
+    .nav svg{width:20px;height:20px}
+    .nav.prev{left:14px}
+    .nav.next{right:14px}
+    .nav:focus-visible{outline:2px solid #000}
+    .indicator{
+      position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+      font-size:.9rem;color:var(--subtle);background:rgba(255,255,255,.85);
+      border:1px solid var(--line);border-radius:999px;padding:4px 10px
+    }
+
+    /* Mobile tweaks */
+    @media (max-width: 720px){
+      .header-inner{padding:8px 14px}
+      .menu a{font-size:.84rem}
+      .card{padding:18px}
+      .lead{text-align:left}
+      .twocol{grid-template-columns:1fr}
+      .kv{grid-template-columns:100px 1fr}
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">DLUCA</div>
+    <nav class="menu">
+      <a href="https://junheean.github.io/junhee/">About Me</a>
+      <a href="https://dluca.myportfolio.com" target="_blank" rel="noopener">Portfolio</a>
+      <a href="https://www.instagram.com/d.luca0/" target="_blank" rel="noopener">Instagram</a>
+      <a href="executive-summary.pdf" target="_blank" rel="noopener">Exec&nbsp;Summary (PDF)</a>
+    </nav>
+  </div>
+</header>
+
+<main class="viewport" aria-live="polite">
+  <div class="track" id="track">
+
+    <!-- Slide 1: Overview + direct links -->
+    <section class="slide" id="s1" aria-label="Overview & Links">
+      <div class="card">
+        <h1 class="title">Project LUA</h1>
+        <figure class="hero"><img src="hero.jpg" alt="Project LUA hero image"></figure>
+        <div class="tag">
+          <em>Real Presence, Real Conversation</em>
+          <span class="sep" aria-hidden="true"></span>
+          <em>From answers to encounters</em>
+        </div>
+        <p class="lead">
+          <b>On-Screen Dialogue NPC Toolkit</b> (보이는 대화 NPC 툴킷).  
+          UE5/MetaHuman 기반으로 <b>대화·자막·음성·립싱크·감정</b>을 한 프레임 안에서 맞물리게 만들어
+          ‘답변’이 아니라 ‘만남’을 구현합니다.
+        </p>
+        <div class="ctas" role="group" aria-label="Direct links">
+          <a class="btn" href="https://youtu.be/FwiWDV9LYas" target="_blank" rel="noopener">Prototype Demo</a>
+          <a class="btn" href="https://youtu.be/AUik19Bm5PI" target="_blank" rel="noopener">Vision Video</a>
+          <a class="btn" href="https://youtu.be/XkNIi9d-ayc" target="_blank" rel="noopener">EdTech Showcase</a>
+          <a class="btn" href="executive-summary.pdf" target="_blank" rel="noopener">Executive Summary (PDF)</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2: Problem → Opportunity -->
+    <section class="slide" id="s2" aria-label="Problem and Opportunity">
+      <div class="card">
+        <h2 class="h">Problem → Opportunity</h2>
+        <div class="pair">
+          <div>
+            <p><b>Presence Gap (존재 격차)</b> — 텍스트/음성만으로는 신뢰·정서·몰입 축적이 어렵습니다.</p>
+            <p><b>Uncanny Fatigue (불쾌부조화 피로)</b> — 표정·타이밍이 어긋나면 피로도가 급증합니다.</p>
+            <p><b>Brand Incoherence (브랜드 일관성 붕괴)</b> — 장면별 톤/금칙/지식 경계 유지가 어렵습니다.</p>
+            <p><b>Operational Friction (운영 마찰)</b> — 응답 속도·백채널·표현 미세조정에 높은 비용이 듭니다.</p>
+          </div>
+          <div class="hr"></div>
+          <div>
+            <p><b>Game fit</b> — 튜토리얼/가이드/도슨트/라이브 이벤트 장면에서 <b>완료율·체류시간·설득력</b> 개선이 목표입니다.</p>
+            <div class="tag-kv">
+              <span class="chip">Tutorial Completion ↑</span>
+              <span class="chip">Quest Acceptance ↑</span>
+              <span class="chip">Session Length ↑</span>
+              <span class="chip">Player Trust ↑</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: Solution (game-ish wording) -->
+    <section class="slide" id="s3" aria-label="Solution">
+      <div class="card">
+        <h2 class="h">Solution — On-Screen Dialogue NPC Toolkit</h2>
+        <p class="lead" style="text-align:left">
+          LUA는 팀의 아트/연출을 <b>Dialogue Model(대화 모델)</b>, <b>TTS(음성 합성)</b>, <b>Lip-sync/Emotion(립싱크/감정)</b>과
+          <b>룰 기반</b>으로 묶어주는 <b>런타임 툴킷</b>입니다. 스튜디오는 장면/튜토리얼에 맞춰
+          <b>NPC Persona Preset(페르소나 프리셋)</b>과 <b>Quest/Scene Script(퀘스트/씬 스크립트)</b>만 교체하면 됩니다.
+        </p>
+        <ul class="bul">
+          <li><b>Visible Conversation(보이는 대화)</b>: 시선·표정·백채널·타이밍까지 화면에서 보이게.</li>
+          <li><b>Persona Preset(페르소나 프리셋)</b>: 톤/금칙/지식 경계 프로필을 데이터 에셋으로 관리.</li>
+          <li><b>Scene Script(씬 스크립트)</b>: 튜토리얼/도슨트용 대화 규칙셋, 페이싱 버짓 포함.</li>
+          <li><b>Ops-Ready(운영 대비)</b>: 폴백/로그/리플레이/프리셋 스위치로 라이브 대응.</li>
+        </ul>
+        <div class="ctas">
+          <a class="btn" href="#s4">Go to Runtime Director</a>
+          <a class="btn" href="executive-summary.pdf" target="_blank" rel="noopener">Executive Summary (PDF)</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Runtime Director (System Architecture) -->
+    <section class="slide" id="s4" aria-label="Runtime Director">
+      <div class="card">
+        <h2 class="h">Runtime Director (런타임 디렉터)</h2>
+        <div class="twocol">
+          <div>
+            <h3 class="h" style="font-size:1.02rem">Runtime Interaction Flow</h3>
+            <p>Input → <b>Dialogue Model(stream)</b> → TTS → <b>Viseme</b> 계산 → Lip-sync + Emotion/Micro-Idle → Subtitle/Audio Sync</p>
+            <div class="hr soft-divider"></div>
+            <h3 class="h" style="font-size:1.02rem">Dialogue Director Rules (대화 디렉터 규칙)</h3>
+            <p>
+              발화 끊김을 줄이기 위해 합성 시작은 두 조건으로 제한합니다:
+              <b>(a)</b> 최종 문장 확정(<i>OnFinal</i>) 수신, <b>(b)</b> 짧은 시간/길이 기준으로 청크가 임계치 이상 누적(짧은 청크 결합).
+            </p>
+          </div>
+          <div>
+            <ul class="bul">
+              <li><b>Viseme smoothing</b>: attack/release, low-pass로 입모양 튐 억제</li>
+              <li><b>Emotion easing</b>: 표정 전이 이징으로 프레임 감성 유지</li>
+              <li><b>Gaze IK(시선 동기화)</b>: 카메라 랜드마크(u,v) → Eye/Head 본 매핑(+스무딩)</li>
+              <li><b>UI State</b>: Listening/Thinking/Speaking, 백채널 패턴 라이브러리</li>
+              <li><b>Safety Guard</b>: 금칙/필터, 폴백/로그/리플레이</li>
+            </ul>
+            <div class="ctas">
+              <a class="btn" href="#s5">Terms & Presets</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Terms (game wording, KR/EN) + Presets -->
+    <section class="slide" id="s5" aria-label="Terms and Presets">
+      <div class="card">
+        <h2 class="h">Game Terms (한/영 병기) & Presets</h2>
+        <div class="twocol">
+          <div>
+            <ul class="bul">
+              <li><b>On-Screen Dialogue (보이는 대화)</b></li>
+              <li><b>Runtime Director (런타임 디렉터)</b> — 대화/자막/발화의 시점·전이 규칙</li>
+              <li><b>NPC Persona Preset (NPC 페르소나 프리셋)</b> — 톤/금칙/지식 경계</li>
+              <li><b>Quest/Scene Script (퀘스트/씬 스크립트)</b> — 장면별 규칙셋</li>
+              <li><b>Timing Budget (타이밍 버짓)</b> — 자막/발화/백채널 타이밍 예산</li>
+              <li><b>Gaze IK (시선 동기화)</b></li>
+              <li><b>Safety Guard (콘텐츠 필터/폴백)</b></li>
+              <li><b>Presence Gap / Uncanny Fatigue</b></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="h" style="font-size:1.02rem">Preset 구조(예시)</h3>
+            <ul class="bul">
+              <li><b>persona.json</b> — tone, forbidden, knowledge boundary</li>
+              <li><b>scene.json</b> — tutorial/guide rules, timing budget</li>
+              <li><b>emotion.json</b> — curve constants, transition rules</li>
+            </ul>
+            <p style="color:var(--subtle)">* UE DataAsset 형태로도 매핑 가능 (BP/AnimBP 연동)</p>
+            <div class="ctas">
+              <a class="btn" href="#s6">Go to Roadmap</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: Roadmap (title above content) -->
+    <section class="slide" id="s6" aria-label="Roadmap">
+      <div class="card">
+        <h2 class="h">Roadmap</h2>
+        <div class="twocol">
+          <div>
+            <h3 class="h" style="font-size:1.02rem">11월 — 시스템 품질 정비</h3>
+            <ul class="bul">
+              <li>STT 입력(청취 상태·침묵 타임아웃·발화 전환 규칙)</li>
+              <li>Gaze Sync 1차(u,v → Eye/Head 본 매핑 + 스무딩)</li>
+              <li>UI 상태 체계화: Listening / Thinking / Speaking, 백채널 라이브러리</li>
+              <li>LLM 교체 가능 구조(어댑터/프롬프트 프로필 분리)</li>
+              <li>반응 속도 개선(청크 결합, 자막/발화 페이싱 버짓)</li>
+              <li>Lip-sync 튐 완화(attack/release·LPF·이징)</li>
+              <li>Emotion 커브 시간상수·전이 규칙 정립</li>
+              <li>전체 성능 개선</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="h" style="font-size:1.02rem">12월 — 패키징 & 평가</h3>
+            <ul class="bul">
+              <li>패키징/런처·프리셋 번들(데모/전시용, 로깅 옵션)</li>
+              <li>소규모 사용자 평가(파일럿): Presence/Uncanny/이해도 지표</li>
+              <li>공모전 제출: Creative Award 등 자료 정리</li>
+            </ul>
+            <h3 class="h" style="font-size:1.02rem;margin-top:12px">1월 — PoC & 현장 운용 설계</h3>
+            <ul class="bul">
+              <li>PoC 기획/세팅 가이드(하드웨어, 카메라/마이크, 네트워크, 조도)</li>
+              <li>운영 시나리오(폴백, 정책/시나리오 롤백, 로그/리플레이)</li>
+            </ul>
+            <div class="ctas">
+              <a class="btn" href="#s7">Contact & All Links</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 7: Contact + all direct links again -->
+    <section class="slide" id="s7" aria-label="Contact and Links">
+      <div class="card">
+        <h2 class="h">Contact</h2>
+        <div class="twocol">
+          <div>
+            <p style="margin:0 0 10px">
+              <b>안준희</b><br>
+              <span class="small">An Junhee</span><br>
+              <span class="small">SNU Visual Communication Design, 2024.02</span>
+            </p>
+            <div class="kv">
+              <b>About me</b><span><a href="https://junheean.github.io/junhee/">junheean.github.io/junhee/</a></span>
+              <b>Email</b><span><a href="mailto:dluca.ailab@gmail.com">dluca.ailab@gmail.com</a></span>
+              <b>Phone</b><span>010&nbsp;5168&nbsp;3537</span>
+              <b>Insta</b><span><a href="https://www.instagram.com/d.luca0/" target="_blank" rel="noopener">@d.luca0</a></span>
+              <b>Portfolio</b><span><a href="https://dluca.myportfolio.com" target="_blank" rel="noopener">dluca.myportfolio.com</a></span>
+            </div>
+          </div>
+          <div>
+            <h3 class="h" style="font-size:1.02rem">Links</h3>
+            <div class="ctas" style="justify-content:flex-start">
+              <a class="btn" href="https://youtu.be/FwiWDV9LYas" target="_blank" rel="noopener">Prototype Demo</a>
+              <a class="btn" href="https://youtu.be/AUik19Bm5PI" target="_blank" rel="noopener">Vision Video</a>
+              <a class="btn" href="https://youtu.be/XkNIi9d-ayc" target="_blank" rel="noopener">EdTech Showcase</a>
+              <a class="btn" href="executive-summary.pdf" target="_blank" rel="noopener">Executive Summary (PDF)</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Slider controls -->
+  <button class="nav prev" id="prev" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button class="nav next" id="next" aria-label="Next slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="indicator" id="indicator" aria-live="polite">1 / 7</div>
+</main>
+
+<footer style="text-align:center;color:var(--subtle);padding:18px 0 28px">© D-LUCA / Project LUA</footer>
+
+<script>
+(function(){
+  const track = document.getElementById('track');
+  const slides = Array.from(track.children);
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+  const ind  = document.getElementById('indicator');
+  let idx = 0;
+  function go(i, jump=false){
+    idx = Math.max(0, Math.min(i, slides.length-1));
+    const x = -idx * window.innerWidth;
+    track.style.transitionDuration = jump ? '0ms' : '450ms';
+    track.style.transform = `translate3d(${x}px,0,0)`;
+    ind.textContent = (idx+1)+' / '+slides.length;
+    // aria-hidden 업데이트
+    slides.forEach((s,n)=>s.setAttribute('aria-hidden', n===idx ? 'false':'true'));
+    // 해시 업데이트(깊은 링크)
+    const id = slides[idx].id || ('s'+(idx+1));
+    history.replaceState(null,'','#'+id);
+  }
+  function nextSlide(){ go(idx+1); }
+  function prevSlide(){ go(idx-1); }
+  prev.addEventListener('click', prevSlide);
+  next.addEventListener('click', nextSlide);
+  window.addEventListener('resize', ()=>go(idx,true));
+  // 키보드
+  window.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight') nextSlide();
+    else if(e.key==='ArrowLeft') prevSlide();
+  });
+  // 스와이프(터치)
+  let sx=0, dx=0, touching=false;
+  track.addEventListener('touchstart', e=>{ touching=true; sx=e.touches[0].clientX; dx=0; }, {passive:true});
+  track.addEventListener('touchmove', e=>{ if(!touching) return; dx=e.touches[0].clientX - sx; }, {passive:true});
+  track.addEventListener('touchend', ()=>{
+    if(!touching) return;
+    touching=false;
+    if(Math.abs(dx)>50){ (dx<0?nextSlide:prevSlide)(); }
+  });
+  // 해시로 특정 슬라이드 진입
+  const hash = location.hash.replace('#','');
+  const startIdx = hash ? slides.findIndex(s=>s.id===hash) : 0;
+  go(startIdx<0?0:startIdx, true);
+})();
+</script>
+
+</body>
+</html>
