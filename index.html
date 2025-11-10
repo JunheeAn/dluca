@@ -132,6 +132,11 @@
     }
     .kv b{font-weight:700}
 
+    /* ---- Misc ---- */
+    .soft-divider{
+      height:1px; background:var(--line); margin:14px 0; /* 모바일에서 숨김 */
+    }
+
     /* ---- Footer ---- */
     .footer{color:var(--subtle); font-size:.9rem; padding:18px 0 40px}
 
@@ -182,10 +187,12 @@
         width:44px; height:1px; background:rgba(17,17,17,.35);
       }
 
-      /* Roadmap: 모바일에서는 제목이 먼저 나오도록 순서 보정 */
+      /* 모바일 전용: System 내부의 중간 구분선 숨김 */
+      .soft-divider{ display:none; }
+
+      /* Roadmap: 모바일에서는 제목(label)을 내용 위(먼저)로 */
       .twocol.rev .label{ order:-1; }
 
-      /* Problem / Solution: 자동으로 위→아래로 쌓임 */
       /* Contact 표(좌 라벨/우 값) 정렬 간격 축소 */
       .kv{ grid-template-columns: 90px 1fr; gap:6px 10px; }
     }
@@ -299,7 +306,7 @@
     <div class="body">
       <h3 style="margin:0 0 6px; font-weight:700">Runtime Interaction Flow</h3>
       <p style="margin-top:0">Input → LLM(stream) → TTS → Viseme 계산 → Lip-sync + Emotion/Micro-Idle → Subtitle/Audio Sync</p>
-      <div style="height:1px; background:var(--line); margin:14px 0;"></div>
+      <div class="soft-divider"></div> <!-- 모바일에서 숨김 -->
       <h3 style="margin:0 0 6px; font-weight:700">Orchestration</h3>
       <p style="margin-top:0">
         LUA의 오케스트레이션은 수치 튜닝 이전에 흐름을 표준화하는 데 초점을 둔다. 스트리밍 수신 시 자막은 실시간으로 업데이트하고,
@@ -321,9 +328,9 @@
 
 <hr class="rule edge">
 
-<!-- Roadmap (우: 제목, 좌: 내용) -->
+<!-- Roadmap (데스크톱: 우 제목 / 좌 내용, 모바일: 제목이 내용 위로) -->
 <section id="roadmap" class="wrap section">
-  <div class="twocol" style="grid-template-columns: 1fr 1px var(--labelw);">
+  <div class="twocol rev" style="grid-template-columns: 1fr 1px var(--labelw);">
     <div class="body">
       <h3 class="small" style="margin:0 0 6px">11월 — 시스템 품질 정비</h3>
       <ul>
@@ -355,7 +362,7 @@
 
 <hr class="rule edge">
 
-<!-- Contact (두 단 구성: 좌 제목 / 우 내용, 라벨 정렬) -->
+<!-- Contact -->
 <section id="contact" class="wrap section">
   <div class="twocol">
     <div class="label">Contact</div>
