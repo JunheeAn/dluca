@@ -8,7 +8,6 @@
   <meta name="theme-color" content="#f7f9fb">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
-    /* ---- Theme ---- */
     :root{
       --bg:#f7f9fb; --fg:#111; --muted:#2a2a2a; --subtle:#666;
       --line:rgba(17,17,17,.16); --maxw:800px; --labelw:180px;
@@ -22,7 +21,6 @@
     html{scroll-behavior:smooth}
     section[id]{scroll-margin-top:84px}
 
-    /* ---- Header ---- */
     .header{position:sticky; top:0; z-index:50; backdrop-filter:saturate(1.05) blur(6px);
       background:rgba(247,249,251,.86); border-bottom:1px solid var(--line);}
     .header-inner{width:100%; padding:10px 36px 10px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px;}
@@ -31,14 +29,12 @@
     .menu a{font-size:.86rem; color:var(--subtle)}
     .menu a:focus,.menu a:hover{color:var(--fg)}
 
-    /* ---- Containers ---- */
     .wrap{max-width:var(--maxw); margin:0 auto; padding:0 18px}
     .edge-row{padding:0 var(--edge);}
     .rule{border:0; border-top:1px solid var(--line); margin:28px auto}
     .rule.edge{width:calc(100% - (var(--edge) * 2)); margin-left:auto; margin-right:auto;}
     h1,h2,h3{margin:0}
 
-    /* ---- Titlebar ---- */
     .titlebar{display:flex; align-items:flex-end; justify-content:space-between; gap:12px; padding:0 var(--edge);}
     .page-title{font-weight:200; letter-spacing:-.2px; font-size:54px; line-height:1.05; margin:18px 0 6px;}
     .title-cta{display:inline-block; background:#eceff3; color:#111; border:1px solid var(--line); border-radius:999px;
@@ -51,22 +47,18 @@
       .title-cta{font-size:.84rem; padding:7px 10px; margin-bottom:6px;}
     }
 
-    /* ---- Hero ---- */
     .hero{margin:0}
     .hero img{display:block; width:100%; height:auto; border:1px solid var(--line);}
 
-    /* ---- Tagline ---- */
     .tag-wrap{max-width:var(--maxw); margin:12px auto 8px; padding:0 18px}
     .tagline{display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:#151515;}
     .tagline em{font-style:italic; font-weight:200; letter-spacing:.2px; font-size:1.02rem;}
     .tagline .sep{width:1px; height:22px; background:#151515; opacity:.45; margin:14px 0; display:inline-block;}
 
-    /* ---- Overview CTAs ---- */
     .cta-row{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:12px}
     .btn{background:#222; color:#fff; border:1px solid rgba(255,255,255,.8); border-radius:12px; padding:8px 12px; font-size:.88rem; white-space:nowrap;}
     .btn:hover{border-color:#fff; text-decoration:none}
 
-    /* ---- Two-column ---- */
     .section{padding:18px 0}
     .twocol{display:grid; grid-template-columns: var(--labelw) 1px 1fr; gap:var(--gap); align-items:start;}
     .vrule{width:1px; background:var(--line); min-height:100%}
@@ -76,27 +68,30 @@
     .body.tight{margin-top:-4px;}
     .twocol .body > *:first-child{margin-top:0}
 
-    /* ---- Problem | Solution ---- */
     .split{display:grid; grid-template-columns: 1fr 1px 1fr; gap:var(--gap); align-items:start;}
     .subhead{font-weight:800; font-size:1.06rem; line-height:1.3; margin-bottom:6px; position:relative; display:inline-block; padding-bottom:6px;}
     .subhead::after{content:""; position:absolute; left:0; bottom:0; width:44px; height:1px; background:rgba(17,17,17,.35);}
 
-    /* ---- Contact grid ---- */
     .kv{display:grid; grid-template-columns: 110px 1fr; gap:8px 14px; align-items:start;}
     .kv b{font-weight:700}
 
-    /* ---- Emotion demo grid ---- */
     .media{margin:0}
     .media img, .media video{display:block; width:100%; height:auto; border:1px solid var(--line)}
     .cap{font-size:.85rem; color:#555; margin:6px 2px 0}
     .demo-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px;}
     .demo-grid .media.full{grid-column:1 / -1}
 
-    /* ---- Misc ---- */
+    /* Intro video block */
+    .intro{max-width:780px; margin:14px auto 0; padding:0 18px;}
+    .intro p{margin:6px 0 0; font-size:.9rem; color:#444; text-align:center}
+
+    /* Prompt section */
+    .video-card{display:grid; grid-template-columns:1fr; gap:8px; max-width:720px}
+    .video-actions{display:flex; gap:10px; flex-wrap:wrap}
+
     .soft-divider{height:1px; background:var(--line); margin:14px 0}
     .footer{color:var(--subtle); font-size:.9rem; padding:18px 0 40px}
 
-    /* ---- Mobile (≤720px) ---- */
     @media (max-width: 720px) {
       .wrap{ padding-left:20px; padding-right:20px; }
       .tag-wrap{ padding-left:20px; padding-right:20px; }
@@ -117,6 +112,8 @@
       .kv{ grid-template-columns: 90px 1fr; gap:6px 10px; }
       .demo-grid{grid-template-columns:1fr}
       .demo-grid .media.full{grid-column:auto}
+      .intro{padding:0 12px;}
+      .video-card{max-width:100%}
     }
   </style>
 </head>
@@ -134,19 +131,15 @@
   </div>
 </header>
 
-<!-- Titlebar -->
 <div class="titlebar">
   <h1 class="page-title">Project LUA</h1>
   <a class="title-cta" href="game/" aria-label="Game Studio Slides로 이동">Game Studio Slides&nbsp;&gt;</a>
 </div>
 
-<!-- Hero -->
 <figure class="hero">
-  <!-- hero 이미지는 레포 루트에 hero.jpg 로 업로드 -->
   <img src="hero.jpg" alt="Project LUA banner">
 </figure>
 
-<!-- Tagline -->
 <div class="tag-wrap">
   <div class="tagline" aria-label="Tagline">
     <em>Real Presence, Real Conversation</em>
@@ -157,7 +150,6 @@
 
 <hr class="rule edge">
 
-<!-- Overview -->
 <section id="overview" class="wrap section" style="text-align:center">
   <p class="lead" style="margin:0 auto; max-width:680px">
     <b>Project LUA</b>는 ‘보이는 대화(Visible Conversation)’를 목표로 하는 실시간 디지털 휴먼 연구/프로토타입이다.
@@ -169,14 +161,18 @@
     <a class="btn" href="https://youtu.be/FwiWDV9LYas" target="_blank" rel="noopener">Prototype&nbsp;Demo</a>
     <a class="btn" href="https://youtu.be/AUik19Bm5PI" target="_blank" rel="noopener">Vision&nbsp;Video</a>
     <a class="btn" href="https://youtu.be/XkNIi9d-ayc" target="_blank" rel="noopener">EdTech&nbsp;Showcase</a>
-    <!-- executive-summary.pdf 는 레포 루트에 파일명 그대로 업로드 -->
     <a class="btn" href="executive-summary.pdf" target="_blank" rel="noopener">Executive&nbsp;Summary&nbsp;(PDF)</a>
+  </div>
+
+  <!-- Intro: 눈 뜨는 짧은 영상 (자동 1회 재생, 무음) -->
+  <div class="intro">
+    <video src="assets/videos/eye_intro.mp4" autoplay muted playsinline preload="metadata"></video>
+    <p>Intro — Eyes open</p>
   </div>
 </section>
 
 <hr class="rule edge">
 
-<!-- Definition -->
 <section id="definition" class="wrap section" style="--labelw:260px">
   <div class="twocol">
     <div class="label">Definition</div>
@@ -194,7 +190,6 @@
 
 <hr class="rule edge">
 
-<!-- Problem | Solution -->
 <section id="ps" class="wrap section">
   <div class="split">
     <div class="body">
@@ -223,7 +218,6 @@
 
 <hr class="rule edge">
 
-<!-- System Architecture -->
 <section id="system" class="wrap section">
   <div class="twocol">
     <div class="label">System Architecture</div>
@@ -248,54 +242,61 @@
         텍스트 파이프라인에서는 어댑터 단계 정제로 불필요한 문자열이 음성으로 읽히지 않도록 한다. (STT·Gaze Sync는 동일한 프레임에 편입될 로드맵 항목으로 유지.)
       </p>
 
-      <!-- ===== Emotion & Viseme Demos ===== -->
+      <!-- Emotion & Viseme Demos -->
       <h3 style="margin:16px 0 6px; font-weight:700">Emotion &amp; Viseme Demos</h3>
       <p class="body" style="margin:0 0 10px">5초 루프 샘플. <b>Intensity</b>와 <b>Blend Transition</b> 중심.</p>
-
       <div class="demo-grid">
-        <!-- 1행: Intensity — neutral -->
         <figure class="media">
-          <video src="assets/emotions/neutral.mp4"
-                 autoplay muted loop playsinline preload="metadata"></video>
+          <video src="assets/emotions/neutral.mp4" autoplay muted loop playsinline preload="metadata"></video>
           <figcaption class="cap">Intensity — Neutral</figcaption>
         </figure>
-
-        <!-- 1행: Intensity — hap0.6 -->
         <figure class="media">
-          <video src="assets/emotions/hap0.6.mp4"
-                 autoplay muted loop playsinline preload="metadata"></video>
+          <video src="assets/emotions/hap0.6.mp4" autoplay muted loop playsinline preload="metadata"></video>
           <figcaption class="cap">Intensity — Happy 0.6</figcaption>
         </figure>
-
-        <!-- 2행: Blend — sad0.6 + ang0.6 -->
         <figure class="media">
-          <video src="assets/emotions/sad0.6+ang0.6.mp4"
-                 autoplay muted loop playsinline preload="metadata"></video>
+          <video src="assets/emotions/sad0.6+ang0.6.mp4" autoplay muted loop playsinline preload="metadata"></video>
           <figcaption class="cap">Blend Transition — Sad 0.6 → Angry 0.6</figcaption>
         </figure>
-
-        <!-- 2행: Blend — ang0.6 + pen0.4 -->
         <figure class="media">
-          <video src="assets/emotions/ang0.6+pen0.4.mp4"
-                 autoplay muted loop playsinline preload="metadata"></video>
+          <video src="assets/emotions/ang0.6+pen0.4.mp4" autoplay muted loop playsinline preload="metadata"></video>
           <figcaption class="cap">Blend Transition — Angry 0.6 → Pensive 0.4</figcaption>
         </figure>
-
-        <!-- 마지막: ABP 가중치 노드 이미지(2칸 폭) -->
         <figure class="media full">
           <img src="assets/emotions/abp_viseme_weights.png" alt="AnimBP Viseme Weight Node">
           <figcaption class="cap">AnimBP Viseme Weight Node</figcaption>
         </figure>
       </div>
-      <!-- ===== /Emotion & Viseme Demos ===== -->
-
+      <!-- /Emotion & Viseme Demos -->
     </div>
   </div>
 </section>
 
 <hr class="rule edge">
 
-<!-- Roadmap -->
+<!-- NEW: Prompt Design & Interrogation -->
+<section id="prompt" class="wrap section">
+  <div class="twocol" style="--labelw:240px">
+    <div class="label">Prompt Design &amp; Interrogation</div>
+    <div class="vrule" aria-hidden="true"></div>
+    <div class="body">
+      <div class="video-card">
+        <p class="narrow" style="margin-top:0">
+          **LyingPrompt** — 소속(예: “SNU 재학”) 같은 민감 정보는 페르소나/정책 레이어에서 명시적으로 관리한다.
+          반복 추궁·역질문 등 인터랙션 패턴에 대해 <b>가드레일(prompt policy)</b>과 <b>응답 페이스</b>를 분리해 설계, 허위 동일시를 최소화한다.
+        </p>
+        <!-- 2분 영상: metadata만 미리 로드, 클릭 시 재생 -->
+        <video src="assets/videos/lying_prompt.mp4" controls preload="metadata" playsinline></video>
+        <div class="video-actions">
+          <a class="btn" href="assets/videos/lying_prompt.mp4" target="_blank" rel="noopener">2-min Full Video</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule edge">
+
 <section id="roadmap" class="wrap section">
   <div class="twocol rev" style="grid-template-columns: 1fr 1px var(--labelw);">
     <div class="body">
@@ -329,7 +330,6 @@
 
 <hr class="rule edge">
 
-<!-- Contact -->
 <section id="contact" class="wrap section">
   <div class="twocol">
     <div class="label">Contact</div>
