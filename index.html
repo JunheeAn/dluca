@@ -32,7 +32,7 @@
     .header-inner{width:100%; padding:10px 36px 10px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px;}
     .brand{font-weight:800; font-size:.95rem; letter-spacing:.1px;}
 
-    /* NEW: brand + identity button row */
+    /* Brand row + Identity button */
     .brand-row{display:flex; align-items:center; gap:10px;}
     .identity-btn{
       display:inline-block;
@@ -116,10 +116,9 @@
     .intro{max-width:var(--media-max); margin:14px auto 0; padding:0 18px;}
     .intro video{
       display:block; margin:0 auto; width:100%;
-      /* 아래 두 줄로 레터박스 없이 컨테이너를 채워 크롭 */
       aspect-ratio:16/9; object-fit:cover;
-      border:0; /* 테두리 제거 */
-      background:#000; /* 로딩 중 배경 */
+      border:0;
+      background:#000;
     }
     .intro p{margin:6px 0 0; font-size:.9rem; color:#444; text-align:center}
 
@@ -132,7 +131,7 @@
     .soft-divider{height:1px; background:var(--line); margin:14px 0}
     .footer{color:var(--subtle); font-size:.9rem; padding:18px 0 40px}
 
-    /* NEW: Identity modal (center aligned) */
+    /* ===== DLUCA Identity Modal (center aligned) ===== */
     .identity-modal{
       position:fixed; inset:0;
       display:none; align-items:center; justify-content:center;
@@ -164,10 +163,11 @@
       line-height:1;
     }
     .identity-close:hover{background:#e6e9ee; text-decoration:none;}
+
     .identity-content{
       text-align:center;
       color:var(--muted);
-      padding:6px 6px 2px;
+      padding:6px 8px 2px;
     }
     .identity-content h2{
       margin:0 0 10px;
@@ -176,28 +176,42 @@
       letter-spacing:.1px;
       color:#111;
     }
+    .identity-content .hint{font-size:.92rem; color:#444; margin:0 0 16px;}
+    .identity-content .divider{
+      height:1px; background:var(--line);
+      width:min(520px, 100%);
+      margin:18px auto;
+    }
+
+    /* 섹션 간격(조금 더 띄우기) */
     .identity-content h3{
-      margin:18px 0 6px;
+      margin:28px 0 10px;
       font-weight:800;
       font-size:.96rem;
       color:#111;
     }
-    .identity-content .k{font-family:'Noto Sans KR','Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;}
-    .identity-content .en{font-family:'Inter','Noto Sans KR',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;}
-    .identity-content p{margin:0 0 8px;}
-    .identity-content .divider{
-      height:1px; background:var(--line);
-      width:min(520px, 100%);
-      margin:14px auto;
+    .identity-content p{margin:0 0 10px;}
+    .identity-content .block{margin-top:6px;}
+    .identity-essence{
+      font-style:italic;
+      font-weight:200;
+      letter-spacing:.2px;
+      font-size:1.02rem;
+      color:#111;
+      display:inline-block;
+      margin-bottom:6px;
     }
+
     .identity-content ul{
       list-style:none;
       padding:0;
-      margin:10px 0 0;
+      margin:12px 0 0;
     }
-    .identity-content li{margin:6px 0;}
+    .identity-content li{
+      margin:14px 0;
+      line-height:1.6;
+    }
     .identity-content b{color:#111;}
-    .identity-content .hint{font-size:.92rem; color:#444;}
 
     /* Mobile */
     @media (max-width: 720px) {
@@ -223,53 +237,81 @@
       .intro{padding:0 12px;}
       .prompt-inner{max-width:100%}
 
-      /* modal tighter */
       .identity-card{padding:18px 14px 14px; border-radius:16px;}
       .identity-btn{padding:6px 9px; font-size:.8rem;}
+      .identity-content h3{margin:24px 0 10px;}
+      .identity-content li{margin:12px 0;}
     }
   </style>
 </head>
 <body>
 
-<!-- NEW: DLUCA Identity Modal -->
+<!-- DLUCA Identity Modal -->
 <section id="dluca-identity" class="identity-modal" aria-label="DLUCA Identity (Modal)">
   <div class="identity-card" role="dialog" aria-modal="true" aria-labelledby="identityTitle">
     <a class="identity-close" href="#" aria-label="닫기">×</a>
 
     <div class="identity-content">
-      <h2 id="identityTitle" class="en">DLUCA Identity</h2>
-      <p class="hint k">브랜드/조직 소개를 위한 핵심 정체성 요약</p>
+      <h2 id="identityTitle">DLUCA Identity</h2>
+      <p class="hint">브랜드/조직 소개를 위한 핵심 정체성 요약</p>
+
+      <!-- One-liner (헤더 없이, 맨 처음) -->
+      <p class="block">
+        DLUCA는 실시간 대화형 디지털 휴먼을 디자인·구현하는<br>
+        Realistic AI Digital Human Studio다.
+      </p>
 
       <div class="divider" aria-hidden="true"></div>
 
-      <h3 class="en">Brand Essence</h3>
-      <p class="en"><b>Real Presence, Real Conversation</b></p>
-      <p class="k">말하는 디지털 휴먼을 넘어, 존재하고 상호작용하는 경험을 만든다.</p>
+      <!-- Brand Essence (위에 중복된 섹션 제거: 이 섹션만 남김) -->
+      <h3>Brand Essence</h3>
+      <div class="block">
+        <span class="identity-essence">Real Presence, Real Conversation</span>
+        <p>
+          보이는 디지털 휴먼을 넘어,<br>
+          함께 있는 감각(존재감)을 설계한다.
+        </p>
+      </div>
 
-      <h3 class="en">One-liner</h3>
-      <p class="k">DLUCA는 실시간 대화형 디지털 휴먼을 디자인·구현하는 <b>Realistic AI Digital Human Studio</b>다.</p>
+      <h3>Purpose</h3>
+      <p>
+        사람과 인공지능 사이의 대화를 더 인간다운, 보이는 경험으로 재구성,<br>
+        디지털 존재가 실제 공간/시간 속에서 함께 있는 감각을 구현한다.
+      </p>
 
-      <h3 class="en">Brand Essence</h3>
-      <p class="en"><b>Real Presence, Real Conversation</b></p>
-      <p class="k">보이는 디지털 휴먼을 넘어, 함께 있는 감각(존재감)을 설계한다.</p>
+      <h3>Mission</h3>
+      <p>
+        DLUCA는 디지털 휴먼이 ‘말하는 캐릭터’가 아니라<br>
+        ‘함께 있는 존재’처럼 느껴지도록 만드는 상호작용 경험을 만들기 위해<br>
+        존재한다.
+      </p>
 
-      <h3 class="en">Purpose</h3>
-      <p class="k">사람과 인공지능 사이의 대화를 더 인간다운, 보이는 경험으로 재구성,</p>
-      <p class="k">디지털 존재가 실제 공간/시간 속에서 함께 있는 감각을 구현한다.</p>
+      <h3>Vision</h3>
+      <p>
+        디지털 휴먼이 데모를 넘어 교육·리테일·전시·미디어에서<br>
+        사람처럼 대화하고 감각되는 새로운 인터페이스가 된다.
+      </p>
+      <p>
+        DLUCA는 그 경험의 표준(기술·제작·연출·운영)을 설계한다.
+      </p>
 
-      <h3 class="en">Mission</h3>
-      <p class="k">DLUCA는 디지털 휴먼이 '말하는 캐릭터'가 아니라 '함께 있는 존재'처럼 느껴지도록 만드는 상호작용 경험을 만들기 위해 존재한다.</p>
-
-      <h3 class="en">Vision</h3>
-      <p class="k">디지털 휴먼이 데모를 넘어 교육·리테일·전시·미디어에서 사람처럼 대화하고 감각되는 새로운 인터페이스가 된다.</p>
-      <p class="k">DLUCA는 그 경험의 표준(기술·제작·연출·운영)을 설계한다.</p>
-
-      <h3 class="en">Values</h3>
-      <ul class="k">
-        <li><b>1. Presence over Output</b> — 그럴듯한 답보다 존재감을 우선한다.</li>
-        <li><b>2. Human-centered Realism</b> — 인간다움의 리얼리즘</li>
-        <li><b>3. Craft &amp; Orchestration</b> — 디테일과 흐름의 설계</li>
+      <h3>Values</h3>
+      <ul>
+        <li>
+          <b>1. Presence over Output</b><br>
+          그럴듯한 답보다 존재감을 우선한다.
+        </li>
+        <li>
+          <b>2. Human-centered Realism</b><br>
+          인간다움의 리얼리즘
+        </li>
+        <li>
+          <b>3. Craft &amp; Orchestration</b><br>
+          디테일과 흐름의 설계
+        </li>
       </ul>
+
+      <div class="divider" aria-hidden="true"></div>
     </div>
   </div>
 </section>
@@ -277,7 +319,6 @@
 
 <header class="header" aria-label="Site header">
   <div class="header-inner">
-    <!-- UPDATED: brand + identity button -->
     <div class="brand-row">
       <div class="brand">DLUCA</div>
       <a class="identity-btn" href="#dluca-identity" aria-label="DLUCA Identity 보기">DLUCA Identity</a>
@@ -449,7 +490,6 @@
     <div class="vrule" aria-hidden="true"></div>
     <div class="body">
       <div class="prompt-inner">
-        <!-- 핵심 메시지(개편) -->
         <p class="narrow" style="margin-top:0">
           <b>브랜드/콘셉트에 맞춘 말투·지식 경계·금칙을 ‘프롬프트 프로필’로 분리</b>합니다.
           런타임에서 프로필만 교체하면 캐릭터의 <b>톤/역할/배경</b>이 즉시 전환되어, 전시·캠페인·교육 등
@@ -457,10 +497,8 @@
           인터랙션을 설계해, 브랜드 어트랙션/체험형 연출로도 활용 가능함을 보여줍니다.
         </p>
 
-        <!-- 2분 영상: metadata만, 클릭 시 재생 (폭 축소 적용) -->
         <video src="assets/videos/lying_prompt.mp4" controls preload="metadata" playsinline></video>
 
-        <!-- 기존 설명을 요약으로 유지 -->
         <p class="narrow" style="margin:6px 0 0; font-size:.92rem; color:#444">
           <b>요약:</b> 소속(예: “SNU 재학”) 같은 민감 정보는 페르소나/정책 레이어에서 관리합니다.
           반복 추궁·역질문 패턴에 대해 <b>가드레일(prompt policy)</b>과 <b>응답 페이스</b>를 분리 설계해
