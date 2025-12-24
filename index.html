@@ -12,8 +12,8 @@
       --bg:#f7f9fb; --fg:#111; --muted:#2a2a2a; --subtle:#666;
       --line:rgba(17,17,17,.16);
       --maxw:800px; --labelw:180px; --gap:24px; --edge:16px;
-      --media-max:680px;        /* Intro 등 미디어 가로 기준 */
-      --prompt-max:640px;       /* 프롬프트 섹션 본문/영상 최대 폭 */
+      --media-max:680px;
+      --prompt-max:640px;
     }
     *{box-sizing:border-box}
     html,body{
@@ -27,9 +27,17 @@
     section[id]{scroll-margin-top:84px}
 
     /* Header */
-    .header{position:sticky; top:0; z-index:50; backdrop-filter:saturate(1.05) blur(6px);
-      background:rgba(247,249,251,.86); border-bottom:1px solid var(--line);}
-    .header-inner{width:100%; padding:10px 36px 10px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px;}
+    .header{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter:saturate(1.05) blur(6px);
+      background:rgba(247,249,251,.86);
+      border-bottom:1px solid var(--line);
+    }
+    .header-inner{
+      width:100%;
+      padding:10px 36px 10px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
     .brand{font-weight:800; font-size:.95rem; letter-spacing:.1px;}
 
     /* Brand row + Identity button */
@@ -53,16 +61,30 @@
 
     /* Containers */
     .wrap{max-width:var(--maxw); margin:0 auto; padding:0 18px}
-    .edge-row{padding:0 var(--edge);}
     .rule{border:0; border-top:1px solid var(--line); margin:28px auto}
     .rule.edge{width:calc(100% - (var(--edge) * 2)); margin-left:auto; margin-right:auto;}
     h1,h2,h3{margin:0}
 
-    /* Titlebar (Project LUA + 오른쪽 CTA 버튼) */
-    .titlebar{display:flex; align-items:flex-end; justify-content:space-between; gap:12px; padding:0 var(--edge);}
-    .page-title{font-weight:200; letter-spacing:-.2px; font-size:54px; line-height:1.05; margin:18px 0 6px;}
-    .title-cta{display:inline-block; background:#eceff3; color:#111; border:1px solid var(--line); border-radius:999px;
-      padding:8px 12px; font-size:.88rem; line-height:1; margin-bottom:6px; white-space:nowrap;}
+    /* Titlebar */
+    .titlebar{
+      display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
+      padding:0 var(--edge);
+    }
+    .page-title{
+      font-weight:200; letter-spacing:-.2px;
+      font-size:54px; line-height:1.05;
+      margin:18px 0 6px;
+    }
+    .title-cta{
+      display:inline-block;
+      background:#eceff3; color:#111;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:.88rem; line-height:1;
+      margin-bottom:6px;
+      white-space:nowrap;
+    }
     .title-cta:hover{background:#e6e9ee; text-decoration:none}
 
     @media (max-width:720px){
@@ -83,12 +105,19 @@
 
     /* CTA buttons */
     .cta-row{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:12px}
-    .btn{background:#222; color:#fff; border:1px solid rgba(255,255,255,.8); border-radius:12px; padding:8px 12px; font-size:.88rem; white-space:nowrap;}
+    .btn{
+      background:#222; color:#fff;
+      border:1px solid rgba(255,255,255,.8);
+      border-radius:12px;
+      padding:8px 12px;
+      font-size:.88rem;
+      white-space:nowrap;
+    }
     .btn:hover{border-color:#fff; text-decoration:none}
 
     /* Sections */
     .section{padding:18px 0}
-    .twocol{display:grid; grid-template-columns: var(--labelw) 1px 1fr; gap:var(--gap); align-items:start;}
+    .twocol{display:grid; grid-template-columns: var(--labelw) 1px 1fr; gap:24px; align-items:start;}
     .vrule{width:1px; background:var(--line); min-height:100%}
     .label{color:#111; font-weight:800; font-size:1.08rem; line-height:1.3;}
     .body{color:var(--muted)}
@@ -97,9 +126,16 @@
     .twocol .body > *:first-child{margin-top:0}
 
     /* Problem | Solution */
-    .split{display:grid; grid-template-columns: 1fr 1px 1fr; gap:var(--gap); align-items:start;}
-    .subhead{font-weight:800; font-size:1.06rem; line-height:1.3; margin-bottom:6px; position:relative; display:inline-block; padding-bottom:6px;}
-    .subhead::after{content:""; position:absolute; left:0; bottom:0; width:44px; height:1px; background:rgba(17,17,17,.35);}
+    .split{display:grid; grid-template-columns: 1fr 1px 1fr; gap:24px; align-items:start;}
+    .subhead{
+      font-weight:800; font-size:1.06rem; line-height:1.3;
+      margin-bottom:6px;
+      position:relative; display:inline-block; padding-bottom:6px;
+    }
+    .subhead::after{
+      content:""; position:absolute; left:0; bottom:0;
+      width:44px; height:1px; background:rgba(17,17,17,.35);
+    }
 
     /* K/V grid */
     .kv{display:grid; grid-template-columns: 110px 1fr; gap:8px 14px; align-items:start;}
@@ -112,7 +148,7 @@
     .demo-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px;}
     .demo-grid .media.full{grid-column:1 / -1}
 
-    /* Intro video block (중앙 정렬 + 꽉 채우기) */
+    /* Intro video block */
     .intro{max-width:var(--media-max); margin:14px auto 0; padding:0 18px;}
     .intro video{
       display:block; margin:0 auto; width:100%;
@@ -122,7 +158,7 @@
     }
     .intro p{margin:6px 0 0; font-size:.9rem; color:#444; text-align:center}
 
-    /* Prompt 섹션: 본문/영상 폭 살짝 축소하여 우측 칼럼과 정렬감 맞추기 */
+    /* Prompt section */
     #prompt .body{display:flex; justify-content:flex-start;}
     .prompt-inner{max-width:var(--prompt-max);}
     .prompt-inner video{width:100%; border:1px solid var(--line);}
@@ -220,24 +256,20 @@
       background:#fff;
     }
 
-    /* Body Without Organs gallery */
-    .bwo-gallery{
-      margin-top:14px;
-      text-align:left;
-    }
-    .bwo-gallery figure{margin:0 0 16px;}
+    /* ===== Body Without Organs: full-bleed images ===== */
+    .bwo-card .identity-content{ padding:6px 0 2px; } /* 좌우 패딩 제거 */
+    .bwo-card .identity-content h2,
+    .bwo-card .identity-content .divider{ padding-left:18px; padding-right:18px; } /* 텍스트만 패딩 */
+
+    .bwo-gallery{ margin-top:14px; text-align:left; }
+    .bwo-gallery figure{ margin:0 0 12px; }
     .bwo-gallery img{
       display:block;
       width:100%;
       height:auto;
-      border:1px solid var(--line);
-      border-radius:14px;
+      border:0;           /* 좌우 여백 없이 깔끔하게 */
+      border-radius:0;    /* 가장자리까지 */
       background:#fff;
-    }
-    .bwo-gallery .cap{
-      font-size:.85rem;
-      color:#555;
-      margin:6px 2px 0;
     }
 
     /* Mobile */
@@ -268,8 +300,10 @@
       .identity-btn{padding:6px 9px; font-size:.8rem;}
       .identity-content h3{margin:24px 0 10px;}
       .identity-content li{margin:12px 0;}
-
       .pdf-frame iframe{height:66vh;}
+
+      .bwo-card .identity-content h2,
+      .bwo-card .identity-content .divider{ padding-left:14px; padding-right:14px; }
     }
   </style>
 </head>
@@ -284,7 +318,6 @@
       <h2 id="identityTitle">DLUCA Identity</h2>
       <p class="hint">브랜드/조직 소개를 위한 핵심 정체성 요약</p>
 
-      <!-- One-liner (헤더 없이, 맨 처음) -->
       <p class="block">
         DLUCA는 실시간 대화형 디지털 휴먼을 디자인·구현하는<br>
         Realistic AI Digital Human Studio다.
@@ -292,7 +325,6 @@
 
       <div class="divider" aria-hidden="true"></div>
 
-      <!-- Brand Essence (이 섹션만 남김) -->
       <h3>Brand Essence</h3>
       <div class="block">
         <span class="identity-essence">Real Presence, Real Conversation</span>
@@ -355,6 +387,7 @@
       <h2 id="faceTitle">Face Without Organs</h2>
       <p class="hint">PDF 미리보기</p>
 
+      <!-- PDF 파일을 repo에 올리고, index.html과 같은 위치(또는 경로)에 맞춰 src만 유지/조정하면 됩니다 -->
       <div class="pdf-frame">
         <iframe
           src="HCIK2026_CA_심사용_FaceWithoutOrgans_v01.pdf#view=FitH"
@@ -374,15 +407,14 @@
 
 <!-- Body Without Organs (Gallery) Modal -->
 <section id="body-without-organs" class="identity-modal" aria-label="Body Without Organs (Gallery Modal)">
-  <div class="identity-card" role="dialog" aria-modal="true" aria-labelledby="bodyTitle">
+  <div class="identity-card bwo-card" role="dialog" aria-modal="true" aria-labelledby="bodyTitle">
     <a class="identity-close" href="#" aria-label="닫기">×</a>
 
     <div class="identity-content">
       <h2 id="bodyTitle">Body Without Organs</h2>
-      <p class="hint">이미지 갤러리</p>
 
-      <!-- ✅ 네 폴더/파일명 그대로: assets/body-without-organs/Body Without Organs - 01 ~ 15 -->
-      <!-- 확장자(jpg/png/webp 등)가 무엇이든 대응하도록 JS가 자동으로 찾아서 로드 -->
+      <!-- ✅ 갤러리 텍스트(‘이미지 갤러리’) 제거 완료 -->
+      <!-- ✅ 캡션(각 사진 이름) 제거 완료 -->
       <div class="bwo-gallery" id="bwo-gallery"></div>
 
       <div class="divider" aria-hidden="true"></div>
@@ -437,13 +469,11 @@
     사람과 마주 앉아 대화하는 듯한 <b>존재감·설득력</b>을 만든다. 목표는 ‘빠른 답변’이 아니라, 실제 상호작용에서 체감되는 <b>관계감</b>을 끌어올리는 것이다.
   </p>
 
-  <!-- 위 줄(상단)에 2개 버튼 -->
   <div class="cta-row">
     <a class="btn" href="#face-without-organs">Face&nbsp;Without&nbsp;Organs</a>
     <a class="btn" href="#body-without-organs">Body&nbsp;Without&nbsp;Organs</a>
   </div>
 
-  <!-- 기존 버튼들(아랫줄) -->
   <div class="cta-row">
     <a class="btn" href="https://youtu.be/FwiWDV9LYas" target="_blank" rel="noopener">Prototype&nbsp;Demo</a>
     <a class="btn" href="https://youtu.be/AUik19Bm5PI" target="_blank" rel="noopener">Vision&nbsp;Video</a>
@@ -451,7 +481,6 @@
     <a class="btn" href="executive-summary.pdf" target="_blank" rel="noopener">Executive&nbsp;Summary&nbsp;(PDF)</a>
   </div>
 
-  <!-- Intro video (centered, cropped to fill) -->
   <div class="intro">
     <video src="assets/videos/eye_intro.mp4" autoplay muted playsinline preload="metadata"></video>
     <p>Intro</p>
@@ -532,7 +561,6 @@
         텍스트 파이프라인에서는 어댑터 단계 정제로 불필요한 문자열이 음성으로 읽히지 않도록 한다. (STT·Gaze Sync는 동일한 프레임에 편입될 로드맵 항목으로 유지.)
       </p>
 
-      <!-- Emotion & Viseme Demos -->
       <h3 style="margin:16px 0 6px; font-weight:700">Emotion &amp; Viseme Demos</h3>
       <p class="body" style="margin:0 0 10px">5초 루프 샘플. <b>Intensity</b>와 <b>Blend Transition</b> 중심.</p>
       <div class="demo-grid">
@@ -557,7 +585,6 @@
           <figcaption class="cap">AnimBP Viseme Weight Node</figcaption>
         </figure>
       </div>
-      <!-- /Emotion & Viseme Demos -->
     </div>
   </div>
 </section>
@@ -661,6 +688,7 @@
  * - 폴더: assets/body-without-organs/
  * - 파일명: "Body Without Organs - 01" ~ "Body Without Organs - 15"
  * - 확장자: .jpg / .jpeg / .png / .webp 중 무엇이든 자동으로 찾아 로드
+ * - 캡션/이름 표시 없음
  */
 (function () {
   const mount = document.getElementById("bwo-gallery");
@@ -669,15 +697,11 @@
   const basePath = "assets/body-without-organs/";
   const namePrefix = "Body Without Organs - ";
   const total = 15;
-
-  // 네가 실제로 넣은 확장자가 무엇이든 대응 (우선순위대로 시도)
   const exts = [".jpg", ".jpeg", ".png", ".webp"];
-
   const pad2 = (n) => String(n).padStart(2, "0");
 
   function tryLoad(imgEl, baseFile, idxExt) {
     if (idxExt >= exts.length) {
-      // 전부 실패하면 figure 제거
       const fig = imgEl.closest("figure");
       if (fig) fig.remove();
       return;
@@ -694,9 +718,8 @@
 
     const img = document.createElement("img");
     img.loading = "lazy";
-    img.alt = `Body Without Organs — ${num}`;
+    img.alt = ""; // 화면에 이름 표시하지 않음 (접근성 필요하면 텍스트 넣어도 됨)
 
-    // 실패하면 다음 확장자 시도
     img.addEventListener("error", function () {
       const current = img.getAttribute("data-ext-idx") ? Number(img.getAttribute("data-ext-idx")) : 0;
       const next = current + 1;
@@ -704,16 +727,10 @@
       tryLoad(img, baseFile, next);
     });
 
-    // 첫 시도
     img.setAttribute("data-ext-idx", "0");
     tryLoad(img, baseFile, 0);
 
-    const cap = document.createElement("figcaption");
-    cap.className = "cap";
-    cap.textContent = `Body Without Organs — ${num}`;
-
     fig.appendChild(img);
-    fig.appendChild(cap);
     mount.appendChild(fig);
   }
 })();
