@@ -131,7 +131,7 @@
     .soft-divider{height:1px; background:var(--line); margin:14px 0}
     .footer{color:var(--subtle); font-size:.9rem; padding:18px 0 40px}
 
-    /* ===== DLUCA Identity Modal (center aligned) ===== */
+    /* ===== Modal base ===== */
     .identity-modal{
       position:fixed; inset:0;
       display:none; align-items:center; justify-content:center;
@@ -182,8 +182,6 @@
       width:min(520px, 100%);
       margin:18px auto;
     }
-
-    /* 섹션 간격(조금 더 띄우기) */
     .identity-content h3{
       margin:28px 0 10px;
       font-weight:800;
@@ -201,7 +199,6 @@
       display:inline-block;
       margin-bottom:6px;
     }
-
     .identity-content ul{
       list-style:none;
       padding:0;
@@ -212,6 +209,36 @@
       line-height:1.6;
     }
     .identity-content b{color:#111;}
+
+    /* PDF viewer */
+    .pdf-frame{width:100%; margin-top:14px;}
+    .pdf-frame iframe{
+      width:100%;
+      height:72vh;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+    }
+
+    /* Body Without Organs gallery */
+    .bwo-gallery{
+      margin-top:14px;
+      text-align:left;
+    }
+    .bwo-gallery figure{margin:0 0 16px;}
+    .bwo-gallery img{
+      display:block;
+      width:100%;
+      height:auto;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+    }
+    .bwo-gallery .cap{
+      font-size:.85rem;
+      color:#555;
+      margin:6px 2px 0;
+    }
 
     /* Mobile */
     @media (max-width: 720px) {
@@ -241,6 +268,8 @@
       .identity-btn{padding:6px 9px; font-size:.8rem;}
       .identity-content h3{margin:24px 0 10px;}
       .identity-content li{margin:12px 0;}
+
+      .pdf-frame iframe{height:66vh;}
     }
   </style>
 </head>
@@ -263,7 +292,7 @@
 
       <div class="divider" aria-hidden="true"></div>
 
-      <!-- Brand Essence (위에 중복된 섹션 제거: 이 섹션만 남김) -->
+      <!-- Brand Essence (이 섹션만 남김) -->
       <h3>Brand Essence</h3>
       <div class="block">
         <span class="identity-essence">Real Presence, Real Conversation</span>
@@ -317,6 +346,51 @@
 </section>
 <!-- /DLUCA Identity Modal -->
 
+<!-- Face Without Organs (PDF) Modal -->
+<section id="face-without-organs" class="identity-modal" aria-label="Face Without Organs (PDF Modal)">
+  <div class="identity-card" role="dialog" aria-modal="true" aria-labelledby="faceTitle">
+    <a class="identity-close" href="#" aria-label="닫기">×</a>
+
+    <div class="identity-content">
+      <h2 id="faceTitle">Face Without Organs</h2>
+      <p class="hint">PDF 미리보기</p>
+
+      <div class="pdf-frame">
+        <iframe
+          src="HCIK2026_CA_심사용_FaceWithoutOrgans_v01.pdf#view=FitH"
+          title="Face Without Organs PDF"
+        ></iframe>
+      </div>
+
+      <div class="video-actions" style="margin-top:10px; justify-content:center;">
+        <a class="btn" href="HCIK2026_CA_심사용_FaceWithoutOrgans_v01.pdf" target="_blank" rel="noopener">Open PDF</a>
+      </div>
+
+      <div class="divider" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+<!-- /Face Without Organs (PDF) Modal -->
+
+<!-- Body Without Organs (Gallery) Modal -->
+<section id="body-without-organs" class="identity-modal" aria-label="Body Without Organs (Gallery Modal)">
+  <div class="identity-card" role="dialog" aria-modal="true" aria-labelledby="bodyTitle">
+    <a class="identity-close" href="#" aria-label="닫기">×</a>
+
+    <div class="identity-content">
+      <h2 id="bodyTitle">Body Without Organs</h2>
+      <p class="hint">이미지 갤러리</p>
+
+      <!-- ✅ 네 폴더/파일명 그대로: assets/body-without-organs/Body Without Organs - 01 ~ 15 -->
+      <!-- 확장자(jpg/png/webp 등)가 무엇이든 대응하도록 JS가 자동으로 찾아서 로드 -->
+      <div class="bwo-gallery" id="bwo-gallery"></div>
+
+      <div class="divider" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+<!-- /Body Without Organs (Gallery) Modal -->
+
 <header class="header" aria-label="Site header">
   <div class="header-inner">
     <div class="brand-row">
@@ -363,6 +437,13 @@
     사람과 마주 앉아 대화하는 듯한 <b>존재감·설득력</b>을 만든다. 목표는 ‘빠른 답변’이 아니라, 실제 상호작용에서 체감되는 <b>관계감</b>을 끌어올리는 것이다.
   </p>
 
+  <!-- 위 줄(상단)에 2개 버튼 -->
+  <div class="cta-row">
+    <a class="btn" href="#face-without-organs">Face&nbsp;Without&nbsp;Organs</a>
+    <a class="btn" href="#body-without-organs">Body&nbsp;Without&nbsp;Organs</a>
+  </div>
+
+  <!-- 기존 버튼들(아랫줄) -->
   <div class="cta-row">
     <a class="btn" href="https://youtu.be/FwiWDV9LYas" target="_blank" rel="noopener">Prototype&nbsp;Demo</a>
     <a class="btn" href="https://youtu.be/AUik19Bm5PI" target="_blank" rel="noopener">Vision&nbsp;Video</a>
@@ -573,6 +654,70 @@
 
 <hr class="rule edge">
 <footer class="wrap footer">© D-LUCA / Project LUA</footer>
+
+<script>
+/**
+ * Body Without Organs 갤러리 자동 생성
+ * - 폴더: assets/body-without-organs/
+ * - 파일명: "Body Without Organs - 01" ~ "Body Without Organs - 15"
+ * - 확장자: .jpg / .jpeg / .png / .webp 중 무엇이든 자동으로 찾아 로드
+ */
+(function () {
+  const mount = document.getElementById("bwo-gallery");
+  if (!mount) return;
+
+  const basePath = "assets/body-without-organs/";
+  const namePrefix = "Body Without Organs - ";
+  const total = 15;
+
+  // 네가 실제로 넣은 확장자가 무엇이든 대응 (우선순위대로 시도)
+  const exts = [".jpg", ".jpeg", ".png", ".webp"];
+
+  const pad2 = (n) => String(n).padStart(2, "0");
+
+  function tryLoad(imgEl, baseFile, idxExt) {
+    if (idxExt >= exts.length) {
+      // 전부 실패하면 figure 제거
+      const fig = imgEl.closest("figure");
+      if (fig) fig.remove();
+      return;
+    }
+    const url = basePath + encodeURIComponent(baseFile) + exts[idxExt];
+    imgEl.src = url;
+  }
+
+  for (let i = 1; i <= total; i++) {
+    const num = pad2(i);
+    const baseFile = namePrefix + num;
+
+    const fig = document.createElement("figure");
+
+    const img = document.createElement("img");
+    img.loading = "lazy";
+    img.alt = `Body Without Organs — ${num}`;
+
+    // 실패하면 다음 확장자 시도
+    img.addEventListener("error", function () {
+      const current = img.getAttribute("data-ext-idx") ? Number(img.getAttribute("data-ext-idx")) : 0;
+      const next = current + 1;
+      img.setAttribute("data-ext-idx", String(next));
+      tryLoad(img, baseFile, next);
+    });
+
+    // 첫 시도
+    img.setAttribute("data-ext-idx", "0");
+    tryLoad(img, baseFile, 0);
+
+    const cap = document.createElement("figcaption");
+    cap.className = "cap";
+    cap.textContent = `Body Without Organs — ${num}`;
+
+    fig.appendChild(img);
+    fig.appendChild(cap);
+    mount.appendChild(fig);
+  }
+})();
+</script>
 
 </body>
 </html>
