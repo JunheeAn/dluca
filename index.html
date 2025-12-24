@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype html> 
 <html lang="ko">
 <head>
   <meta charset="utf-8">
@@ -31,6 +31,22 @@
       background:rgba(247,249,251,.86); border-bottom:1px solid var(--line);}
     .header-inner{width:100%; padding:10px 36px 10px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px;}
     .brand{font-weight:800; font-size:.95rem; letter-spacing:.1px;}
+
+    /* NEW: brand + identity button row */
+    .brand-row{display:flex; align-items:center; gap:10px;}
+    .identity-btn{
+      display:inline-block;
+      font-size:.82rem;
+      color:var(--subtle);
+      background:#eceff3;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:7px 10px;
+      line-height:1;
+      white-space:nowrap;
+    }
+    .identity-btn:hover{background:#e6e9ee; text-decoration:none; color:var(--fg);}
+
     .menu{display:flex; gap:18px; align-items:center; margin-left:auto}
     .menu a{font-size:.86rem; color:var(--subtle)}
     .menu a:focus,.menu a:hover{color:var(--fg)}
@@ -116,6 +132,73 @@
     .soft-divider{height:1px; background:var(--line); margin:14px 0}
     .footer{color:var(--subtle); font-size:.9rem; padding:18px 0 40px}
 
+    /* NEW: Identity modal (center aligned) */
+    .identity-modal{
+      position:fixed; inset:0;
+      display:none; align-items:center; justify-content:center;
+      padding:20px;
+      background:rgba(0,0,0,.36);
+      z-index:120;
+    }
+    .identity-modal:target{display:flex;}
+    .identity-card{
+      width:min(760px, 100%);
+      background:rgba(247,249,251,.98);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:0 10px 40px rgba(0,0,0,.12);
+      padding:22px 18px 18px;
+      position:relative;
+      max-height:calc(100vh - 40px);
+      overflow:auto;
+    }
+    .identity-close{
+      position:absolute; top:10px; right:12px;
+      width:34px; height:34px;
+      border-radius:999px;
+      display:flex; align-items:center; justify-content:center;
+      border:1px solid var(--line);
+      background:#eceff3;
+      color:#111;
+      font-size:18px;
+      line-height:1;
+    }
+    .identity-close:hover{background:#e6e9ee; text-decoration:none;}
+    .identity-content{
+      text-align:center;
+      color:var(--muted);
+      padding:6px 6px 2px;
+    }
+    .identity-content h2{
+      margin:0 0 10px;
+      font-weight:800;
+      font-size:1.12rem;
+      letter-spacing:.1px;
+      color:#111;
+    }
+    .identity-content h3{
+      margin:18px 0 6px;
+      font-weight:800;
+      font-size:.96rem;
+      color:#111;
+    }
+    .identity-content .k{font-family:'Noto Sans KR','Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;}
+    .identity-content .en{font-family:'Inter','Noto Sans KR',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;}
+    .identity-content p{margin:0 0 8px;}
+    .identity-content .divider{
+      height:1px; background:var(--line);
+      width:min(520px, 100%);
+      margin:14px auto;
+    }
+    .identity-content ul{
+      list-style:none;
+      padding:0;
+      margin:10px 0 0;
+    }
+    .identity-content li{margin:6px 0;}
+    .identity-content b{color:#111;}
+    .identity-content .hint{font-size:.92rem; color:#444;}
+
     /* Mobile */
     @media (max-width: 720px) {
       .wrap{ padding-left:20px; padding-right:20px; }
@@ -139,14 +222,67 @@
       .demo-grid .media.full{grid-column:auto}
       .intro{padding:0 12px;}
       .prompt-inner{max-width:100%}
+
+      /* modal tighter */
+      .identity-card{padding:18px 14px 14px; border-radius:16px;}
+      .identity-btn{padding:6px 9px; font-size:.8rem;}
     }
   </style>
 </head>
 <body>
 
+<!-- NEW: DLUCA Identity Modal -->
+<section id="dluca-identity" class="identity-modal" aria-label="DLUCA Identity (Modal)">
+  <div class="identity-card" role="dialog" aria-modal="true" aria-labelledby="identityTitle">
+    <a class="identity-close" href="#" aria-label="닫기">×</a>
+
+    <div class="identity-content">
+      <h2 id="identityTitle" class="en">DLUCA Identity</h2>
+      <p class="hint k">브랜드/조직 소개를 위한 핵심 정체성 요약</p>
+
+      <div class="divider" aria-hidden="true"></div>
+
+      <h3 class="en">Brand Essence</h3>
+      <p class="en"><b>Real Presence, Real Conversation</b></p>
+      <p class="k">말하는 디지털 휴먼을 넘어, 존재하고 상호작용하는 경험을 만든다.</p>
+
+      <h3 class="en">One-liner</h3>
+      <p class="k">DLUCA는 실시간 대화형 디지털 휴먼을 디자인·구현하는 <b>Realistic AI Digital Human Studio</b>다.</p>
+
+      <h3 class="en">Brand Essence</h3>
+      <p class="en"><b>Real Presence, Real Conversation</b></p>
+      <p class="k">보이는 디지털 휴먼을 넘어, 함께 있는 감각(존재감)을 설계한다.</p>
+
+      <h3 class="en">Purpose</h3>
+      <p class="k">사람과 인공지능 사이의 대화를 더 인간다운, 보이는 경험으로 재구성,</p>
+      <p class="k">디지털 존재가 실제 공간/시간 속에서 함께 있는 감각을 구현한다.</p>
+
+      <h3 class="en">Mission</h3>
+      <p class="k">DLUCA는 디지털 휴먼이 '말하는 캐릭터'가 아니라 '함께 있는 존재'처럼 느껴지도록 만드는 상호작용 경험을 만들기 위해 존재한다.</p>
+
+      <h3 class="en">Vision</h3>
+      <p class="k">디지털 휴먼이 데모를 넘어 교육·리테일·전시·미디어에서 사람처럼 대화하고 감각되는 새로운 인터페이스가 된다.</p>
+      <p class="k">DLUCA는 그 경험의 표준(기술·제작·연출·운영)을 설계한다.</p>
+
+      <h3 class="en">Values</h3>
+      <ul class="k">
+        <li><b>1. Presence over Output</b> — 그럴듯한 답보다 존재감을 우선한다.</li>
+        <li><b>2. Human-centered Realism</b> — 인간다움의 리얼리즘</li>
+        <li><b>3. Craft &amp; Orchestration</b> — 디테일과 흐름의 설계</li>
+      </ul>
+    </div>
+  </div>
+</section>
+<!-- /DLUCA Identity Modal -->
+
 <header class="header" aria-label="Site header">
   <div class="header-inner">
-    <div class="brand">DLUCA</div>
+    <!-- UPDATED: brand + identity button -->
+    <div class="brand-row">
+      <div class="brand">DLUCA</div>
+      <a class="identity-btn" href="#dluca-identity" aria-label="DLUCA Identity 보기">DLUCA Identity</a>
+    </div>
+
     <nav class="menu" aria-label="Top links">
       <a href="https://junheean.github.io/junhee/">About Me</a>
       <a href="https://dluca.myportfolio.com" target="_blank" rel="noopener">Portfolio</a>
